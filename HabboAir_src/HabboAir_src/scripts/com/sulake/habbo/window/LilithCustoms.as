@@ -311,7 +311,7 @@ package com.sulake.habbo.window
          this.PetTalkTimer = new Timer(30000,1);
          this.PetTalkTimer.addEventListener(TimerEvent.TIMER,this.PetTalkTimerHandler);
          this.PetTalkMessages = new Array("lpit. beber","lpit. comer");
-         this.BallTrackTimer = new Timer(120);
+         this.BallTrackTimer = new Timer(80);
          this.BallTrackTimer.addEventListener(TimerEvent.TIMER,this.BallTrackTimerHandler);
          this.BallTrackFilters = [new GlowFilter(16711680,1,40,40,8,3,false,false)];
          this.BallTrackMarkerIds = new Array(900000,900001,900002,900003,900004,900005,900006,900007,900008,900009,900010,900011,900012,900013,900014,900015,900016,900017,900018,900019,900020,900021,900022,900023,900024,900025,900026,900027,900028,900029,900030,900031,900032,900033,900034,900035,900036,900037,900038,900039,900040,900041,900042,900043,900044,900045,900046,900047,900048,900049,900050,900051,900052,900053,900054,900055,900056,900057);
@@ -1865,11 +1865,12 @@ package com.sulake.habbo.window
          {
             return 0;
          }
+         var KnownBallTypes:Array = ["fball_ball","fball_ball2","fball_ball3","fball_ball4","fball_ball5"];
          var RoomFurnis:Array = this.WindowManager.roomEngine.getRoomObjects(this.RoomSession.roomId,10);
          var CurrentFurni:* = null;
          for each(CurrentFurni in RoomFurnis)
          {
-            if(CurrentFurni != null && CurrentFurni.getType() == "fball_ball5")
+            if(CurrentFurni != null && KnownBallTypes.indexOf(CurrentFurni.getType()) != -1)
             {
                return int(CurrentFurni.getId());
             }
