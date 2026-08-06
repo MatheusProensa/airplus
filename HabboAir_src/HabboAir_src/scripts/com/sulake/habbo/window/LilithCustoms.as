@@ -1846,7 +1846,7 @@ package com.sulake.habbo.window
             if(PitchFurni != null && String(PitchFurni.getType()).indexOf("fball_ptch") == 0)
             {
                PitchLoc = PitchFurni.getLocation();
-               PitchBoxes.push([int(PitchLoc.x) - 1,int(PitchLoc.y) - 1,int(PitchLoc.x) + 1,int(PitchLoc.y) + 1]);
+               PitchBoxes.push([int(PitchLoc.x) - 2,int(PitchLoc.y) - 2,int(PitchLoc.x) + 2,int(PitchLoc.y) + 2]);
             }
          }
          var TargetX:int = 0;
