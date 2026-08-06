@@ -1827,6 +1827,9 @@ package com.sulake.habbo.window
          var BallBoxId:int = int(this.BallTrackMarkerIds[this.BallTrackMarkerIds.length - 1]);
          this.WindowManager.roomEngine.addObjectFurnitureByName(this.RoomSession.roomId,BallBoxId,"bc_block_1",new Vector3d(CenterX,CenterY,CenterZ),new Vector3d(0),0,new EmptyStuffData());
          this.SetFurnitureColorIndex(BallBoxId,13);
+         var RoomGeometry:* = this.WindowManager.roomEngine.getLegacyGeometry(this.RoomSession.roomId);
+         var TargetX:int = 0;
+         var TargetY:int = 0;
          MarkerIndex = 0;
          for(DirIndex = 0; DirIndex < Directions.length; DirIndex++)
          {
@@ -1834,7 +1837,12 @@ package com.sulake.habbo.window
             for(DistIndex = 1; DistIndex <= LineLength; DistIndex++)
             {
                MarkerId = int(this.BallTrackMarkerIds[MarkerIndex]);
-               this.WindowManager.roomEngine.addObjectFurnitureByName(this.RoomSession.roomId,MarkerId,"tile_marble",new Vector3d(CenterX + int(DirOffset[0]) * DistIndex,CenterY + int(DirOffset[1]) * DistIndex,CenterZ),new Vector3d(0),0,new EmptyStuffData());
+               TargetX = CenterX + int(DirOffset[0]) * DistIndex;
+               TargetY = CenterY + int(DirOffset[1]) * DistIndex;
+               if(RoomGeometry == null || RoomGeometry.isRoomTile(TargetX,TargetY))
+               {
+                  this.WindowManager.roomEngine.addObjectFurnitureByName(this.RoomSession.roomId,MarkerId,"tile_marble",new Vector3d(TargetX,TargetY,CenterZ),new Vector3d(0),0,new EmptyStuffData());
+               }
                MarkerIndex++;
             }
          }
