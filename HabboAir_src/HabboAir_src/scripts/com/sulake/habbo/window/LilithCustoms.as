@@ -1791,8 +1791,11 @@ package com.sulake.habbo.window
          }
          if(this.IsRoomSessionAvailable == true)
          {
-            var RandomMessageIndex:int = int(this.randomRange(0,this.PetTalkMessages.length - 1));
-            this.RoomSession.sendChatMessage(String(this.PetTalkMessages[RandomMessageIndex]),this.WindowManager.roomEngine.toolbar.freeFlowChat.preferedChatStyle);
+            var MessageIndex:int = 0;
+            for(MessageIndex = 0; MessageIndex < this.PetTalkMessages.length; MessageIndex++)
+            {
+               this.RoomSession.sendChatMessage(String(this.PetTalkMessages[MessageIndex]),this.WindowManager.roomEngine.toolbar.freeFlowChat.preferedChatStyle);
+            }
             this.UseMilkBowls();
          }
          this.PetTalkTimer.delay = 10000;
