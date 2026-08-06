@@ -29,6 +29,7 @@ package com.sulake.habbo.window
    import flash.desktop.NativeApplication;
    import flash.events.Event;
    import flash.events.TimerEvent;
+   import flash.filters.GlowFilter;
    import flash.filesystem.File;
    import flash.filesystem.FileMode;
    import flash.filesystem.FileStream;
@@ -83,8 +84,10 @@ package com.sulake.habbo.window
       public var RoomObjectMouseKeyboardShortcutsEnabled:* = true;
       
       public var ShiftWalkBlockEnabled:Boolean = false;
-      
+
       public var CtrlUseFurniOnSingleClickEnabled:Boolean = false;
+
+      public var MandiocaFritaAtiva:Boolean = false;
       
       private var FriendGiveGemID:int;
       
@@ -155,11 +158,25 @@ package com.sulake.habbo.window
       internal var AutoClickObjectsIds:Array;
       
       internal var AutoClickTimer:Timer;
-      
+
       internal var TotemTimer:Timer;
-      
+
       internal var TotemFurni:Array;
-      
+
+      public var PetTalkActive:Boolean = false;
+
+      internal var PetTalkTimer:Timer;
+
+      internal var PetTalkMessages:Array;
+
+      public var BallTrackActive:Boolean = false;
+
+      internal var BallTrackFurniId:int = 0;
+
+      internal var BallTrackTimer:Timer;
+
+      internal var BallTrackFilters:Array;
+
       internal var DevWarTimer:Timer;
       
       internal var TitleBarColor:uint;
@@ -270,7 +287,7 @@ package com.sulake.habbo.window
          this.ChatTextColors = new Array("@red@","@cyan@","@blue@","@green@","@purple@");
          this.ChatTextSpecialMods = new Array("[b]","[/b]","[i]","[/i]","[u]","[/u]","[red]","[/red]","[blue]","[/blue]","[purple]","[/purple]","[green]","[/green]","[cyan]","[/cyan]");
          this.AllowedCommands = new Array(":)",":(",":o",":shake",":d",":kiss",":jump",":news",":mail",":kick",":shutup",":mute",":idle",":fps",":sign",":drop",":dropitem",":chooser",":furni",":pickall",":pickallbc",":resetscores",":ejectall",":ejectpets",":moonwalk",":habnam",":yyxxabxa",":mutepets",":mutebots",":mpgame",":ignore",":unignore",":floor",":bcfloor",":lang",":uc",":anew",":avisit",":aalert",":visit",":roomid",":zoom",":cam",":camera",":fs",":fullscreen",":screenshot",":iddqd",":hidemouse",":demonictriggers",":playing",":fx",":stand",":sit",":dance",":clone",":afk",":ping",":pingsay",":barcolor",":color",":showbubbles",":pingbubble",":pingubble",":pingbeforetext",":pingaftertext",":chatsize",":chatmute",":infostand",":showids",":resetvars",":autoclick",":devwar",":stopdevwar",":autoclickdelay",":lightsaber",":givegem",":linkevent",":calendar",":handitem",":habboway",":safetybook",":respect",":fpsunlock",":unlockfps",":bgcolor",":backlight",":roomlight",":adblock",":typing",":spoofbubbles"
-         ,":spoofbubble",":rotate",":figure",":showquestsids",":acceptquest",":say",":shout",":whisper",":give",":pass",":hkset",":hkclear",":hkshow",":showhk",":f1",":f2",":f3",":f4",":f5",":f6",":f7",":f8",":f9",":f10",":f11",":f12",":commands",":cmdcolor",":chatcolor",":wf",":wired",":var",":variables",":inspect",":inspection",":about",":version",":nodc",":zoomgestures",":flood",":flooddelay",":floodelay",":showfps",":showstats",":abctest",":tradeblock",":walkblock",":chatalarm",":turnblock",":wcublock",":zoomf",":clickuser",":clickfurni",":usefurni",":movetofurni",":aprilfools",":playtest",":crash",":showerrors",":friendhl",":winblend",":barblend",":barstyle",":fon",":shift",":swb",":dc",":ctrl",":hideignoredbubble",":spawn",":laugh",":seasonal",":hkmode",":furnitech",":mutecmd",":clearchat",":clearhist",":caution",":hidefigures",":hidepoints",":linkport",":portlink",":savelook",":removelook",":clearlooks",":uselook",":showlooks",":showstats",":rescam",":totem",":solimp",":solexp",":navfilter",":vip",":mandiocafrita");
+         ,":spoofbubble",":rotate",":figure",":showquestsids",":acceptquest",":say",":shout",":whisper",":give",":pass",":hkset",":hkclear",":hkshow",":showhk",":f1",":f2",":f3",":f4",":f5",":f6",":f7",":f8",":f9",":f10",":f11",":f12",":commands",":cmdcolor",":chatcolor",":wf",":wired",":var",":variables",":inspect",":inspection",":about",":version",":nodc",":zoomgestures",":flood",":flooddelay",":floodelay",":showfps",":showstats",":abctest",":tradeblock",":walkblock",":chatalarm",":turnblock",":wcublock",":zoomf",":clickuser",":clickfurni",":usefurni",":movetofurni",":aprilfools",":playtest",":crash",":showerrors",":friendhl",":winblend",":barblend",":barstyle",":fon",":shift",":swb",":dc",":ctrl",":hideignoredbubble",":spawn",":laugh",":seasonal",":hkmode",":furnitech",":mutecmd",":clearchat",":clearhist",":caution",":hidefigures",":hidepoints",":linkport",":portlink",":savelook",":removelook",":clearlooks",":uselook",":showlooks",":showstats",":rescam",":totem",":solimp",":solexp",":navfilter",":vip",":mandiocafrita",":petfala",":bolagrid");
          this.AirPlusCommandsHabboPageBase64 = "OmJhY2tsaWdodCBbMC0yNTVdIChzZXQgcm9vbSBiYWNrbGlnaHQgdmFsdWUgd2l0aCBmb3JjZWQgbW9kZSkKOnJvb21saWdodCBbMC0yNTVdIChzZXQgcm9vbSBsaWdodCB2YWx1ZSB3aXRoIGZvcmNlZCBtb2RlKQo6Ymdjb2xvciBbSHVlTnVtYmVyXSBbU2F0dXJhdGlvbk51bWJlcl0gW0xpZ2h0bmVzc051bWJlcl0gKGNoYW5nZSByb29tIGJhY2tncm91bmQgY29sb3Igd2l0aCBmb3JjZWQgbW9kZSkKOmZwcyBOdW1iZXIgKGNoYW5nZSBjdXJyZW50IGZwcyB2YWx1ZSB3aXRoIGZvcmNlZCBtb2RlKQo6dW5sb2NrZnBzICh1bmxvY2svbG9jayBhbmltYXRpb25zIGZwcyB3aXRoIGZvcmNlZCBtb2RlKQo6cmVzcGVjdCAoZ2l2ZSByZXNwZWN0cyB0byBjbGlja2VkIHVzZXIpIChVU0UgQVQgT1dOIFJJU0spCjpzYWZldHlib29rIChzaG93IGhvdGVsIHNhZmV0eSBib29rKQo6aGFiYm93YXkgKHNob3cgaGFiYm8gd2F5IGluZm8pCjpoYW5kaXRlbSBbSXRlbUlkXSAoY2hhbmdlIGN1cnJlbnQgdXNlciBoYW5kaXRlbSkgKElOIFNFUlZFUi1TSURFIENBU0VTIFVTRSBBVCBPV04gUklTSykKOmNhbGVuZGFyIChvcGVuIGNhbGVuZGFyKSAoVVNFIEFUIE9XTiBSSVNLKQo6bGlua2V2ZW50IFtMaW5rXSAob3BlbiBhIGxpbmtldmVudCkgKElOIFNFUlZFUi1TSURFIENBU0VTIFVTRSBBVCBPV04gUklTSykKOmdpdmVnZW0gW0Ftb3VudF0gKGdpdmUgZ2VtcyB0byBjbGlja2VkIHVzZXIpIChVU0UgQVQgT1dOIFJJU0spCjpsaWdodHNhYmVyICh0b2dnbGUgbGlnaHRzYWJlciBmeCkKOmF1dG9jbGljayAodG9nZ2xlIGF1dG9jbGljayBtb2RlKQo6YXV0b2NsaWNrZGVsYXkgKGNoYW5nZSBhdXRvY2xpY2sgZGVsYXkpCjpkZXZ3YXIgKHRlc3QgYWxsIGF2YWlsYWJsZSBjbG90aGVzIHdpdGggZm9yY2VkIG1vZGUpIChvcHRpb25hbDogZmlndXJlIGNhbiBiZSBsb2FkZWQgZnJvbSBjbGlja2VkIHVzZXIpIChJTiBTRVJWRVItU0lERSBDQVNFUyBVU0UgQVQgT1dOIFJJU0spCjpzdG9wZGV2d2FyIChzdG9wIGRldndhciBjb21tYW5kIGFuZCByZWNvdmVyIHlvdXIgcmVhbCBsb29rKQo6cmVzZXR2YXJzIChyZXNldCBzYXZlZCBjbGllbnQgdmFyaWFibGVzKQo6aW5mb3N0YW5kICh0b2dnbGUgZnVybmkvdXNlciBpbmZvc3RhbmQgdmlzaWJpbGl0eSkKOmNoYXRtdXRlIChtdXRlL3VubXV0ZSByb29tIGNoYXQgd2l0aCBmb3JjZWQgbW9kZSBhbmQgd2l0aG91dCBhZmZlY3RpbmcgY2hhdCBoaXN0b3J5KQo6Y2hhdHNpemUgWzEyLTQwXSAoY2hhbmdlIGNoYXQgZm9udCBzaXplIHdpdGggZm9yY2VkIG1vZGUpCjpzaG93YnViYmxlcyAoc2hvdyBhbGwgY2hhdCBidWJibGVzIHN0eWxlcykKOnNwb29mYnViYmxlcyBbb3B0aW9uYWw6b3duXSAoc3Bvb2YgY2hhdCBidWJibGVzIHRvIGN1cnJlbnQgc2VsZWN0ZWQgY2hhdCBidWJibGUgc3R5bGUpCjpzZWFzb25hbCAodG9nZ2xlIGNsaWVudCBzZWFzb25hbCBjb2xvcnMpCjpjb2xvciBbSGV4Q29sb3IvY2xhc3NpYy9waW5rXSAoY2hhbmdlIGNsaWVudCB0aXRsZSBiYXIgY29sb3IpCjpiYXJjb2xvciBbSGV4Q29sb3IvY2xhc3NpYy9waW5rXSAoY2hhbmdlIGNsaWVudCBib3R0b20gYmFyIGNvbG9yKQo6d2luYmxlbmQgWzAuMCB0byAxLjBdIChjaGFuZ2UgY2xpZW50IHdpbmRvdyBibGVuZCB2YWx1ZSkKOmJhcmJsZW5kIFswLjAgdG8gMS4wXSAoY2hhbmdlIGNsaWVudCBib3R0b20gYmFyIGJsZW5kIHZhbHVlKQo6YmFyc3R5bGUgKHRvZ2dsZSBjbGllbnQgYm90dG9tIGJhciBhbHRlcm5hdGl2ZSBzdHlsZSkKOnBsYXlpbmcgKHRvZ2dsZSBjbGljay10aHJvdWdoIHdpdGggZm9yY2VkIG1vZGUpCjpmeCBbRnhJZF0gKGNoYW5nZSBjdXJyZW50IHVzZXIgZnggd2l0aCBmb3JjZWQgbW9kZSkgKElOIFNFUlZFUi1TSURFIENBU0VTIFVTRSBBVCBPV04gUklTSykKOmRhbmNlIFswLTRdIChjaGFuZ2UgY3VycmVudCBkYW5jZSBzdHlsZSkKOmNsb25lIFtvcHRpb25hbDpTZXgoTSBvciBGKV0gKGNsb25lIGNsaWNrZWQgdXNlciBsb29rKQo6YWZrICh0b2dnbGUgYW50aSBhZmsgd2l0aCBmb3JjZWQgbW9kZSkKOnBpbmcgKGdldCBsYXRlc3QgcGluZyB2YWx1ZSkgKFVTRSBBVCBPV04gUklTSykKOnBpbmdzYXkgKHB1YmxpY2x5IHNheSBsYXRlc3QgcGluZyB2YWx1ZSkgKFVTRSBBVCBPV04gUklTSykKOnBpbmdiZWZvcmV0ZXh0IChjaGFuZ2UgdGV4dCBiZWZvcmUgcGluZyB2YWx1ZSkKOnBpbmdhZnRlcnRleHQgKGNoYW5nZSB0ZXh0IGFmdGVyIHBpbmcgdmFsdWUpCjpwaW5nYnViYmxlIFtvcHRpb25hbDphdXRvXSAoY2hhbmdlIHBpbmdzYXkgYnViYmxlIHRvIGN1cnJlbnQgc2VsZWN0ZWQgY2hhdCBidWJibGUgc3R5bGUpCjpzaG93aWRzICh0b2dnbGUgb2JqZWN0cyBpZHMgdmlld2VyKQo6dHlwaW5nICh0b2dnbGUgY2hhdCB0eXBpbmcgaW5kaWNhdG9yKSAoVVNFIEFUIE9XTiBSSVNLKQo6cm90YXRlICh0b2dnbGUgcm9vbSByb3RhdGUgZWZmZWN0KQo6YWRibG9jayAodG9nZ2xlIG1wdSBhZCBibG9ja2VyKSAoSU4gU0VSVkVSLVNJREUgQ0FTRVMgVVNFIEFUIE9XTiBSSVNLKQo6ZmlndXJlIFtGaWd1cmVDb2RlXSBbb3B0aW9uYWw6RmlndXJlU2V4KE0gb3IgRildIChjaGFuZ2UgYXZhdGFyIGZpZ3VyZSkKOnNob3dxdWVzdHNpZHMgKHRvZ2dsZSBxdWVzdHMgaWRzKQo6YWNjZXB0cXVlc3QgW1F1ZXN0SWRdIChtYW51YWxseSBhY2NlcHQgcXVlc3QgYnkgaWQpCjpzYXkgW1NvbWV0aGluZ10gKHNheSBzb21ldGhpbmcsIGV2ZW4gY29tbWFuZHMpCjpzaG91dCBbU29tZXRoaW5nXSAoc2hvdXQgc29tZXRoaW5nLCBldmVuIGNvbW1hbmRzKQo6d2hpc3BlciBbU29tZXRoaW5nXSAod2hpc3BlciBzb21ldGhpbmcgdG8gY2xpY2tlZCB1c2VyLCBldmVuIGNvbW1hbmRzKQo6Z2l2ZSBvciA6cGFzcyAoZ2l2ZSBoYW5kaXRlbSB0byBjbGlja2VkIHVzZXIvcGV0KSAoVVNFIEFUIE9XTiBSSVNLIE9OIFBFVFMpCjpoa3NldCBbb3B0aW9uYWw6Q2hhdElucHV0XSAoc2V0IGEgbmV3IGNoYXQgaW5wdXQgaG90a2V5KQo6aGttb2RlICh0b2dnbGUgaG90a2V5IHByZXNzIG1vZGUpCjpoa3Nob3cgKHNob3cgc2F2ZWQgaG90a2V5cykKOmhrY2xlYXIgKGNsZWFyIGNoYXQgaW5wdXQgaG90a2V5cykKOmYxIHRvIDpmMTIgW29wdGlvbmFsOkNoYXRJbnB1dF0gKHF1aWNrbHkgc2V0IG5ldyBjaGF0IGlucHV0IGhvdGtleSB3aXRoIGZ1bmN0aW9uIGtleXMpCjpjb21tYW5kcyAoc2hvdyBhaXJwbHVzIGNvbW1hbmRzIGxpc3QpCjpjbWRjb2xvciAodG9nZ2xlIGNvbW1hbmQgaW5wdXQgY29sb3IgaGludCArIHRhYiBhdXRvY29tcGxldGlvbikKOmNoYXRjb2xvciAodG9nZ2xlIHVzZXJzIGN1c3RvbSBjaGF0IHRleHQgY29sb3IpCjphYm91dCBvciA6dmVyc2lvbiAoc2hvdyBjbGllbnQgdmVyc2lvbiBpbmZvKQo6ZGMgKHRvZ2dsZSB1c2UgZnVybml0dXJlcyBvbiBzaW5nbGUgY2xpY2spCjpub2RjICh0b2dnbGUgZnVybml0dXJlIGRvdWJsZSBjbGljayBjYXBhYmlsaXR5KQo6em9vbWdlc3R1cmVzICh0b2dnbGUgem9vbSBnZXN0dXJlcyBjYXBhYmlsaXR5KQo6Zmxvb2QgW29wdGlvbmFsOkNoYXRJbnB1dF0gICh0b2dnbGUgY2hhdCBpbnB1dCBmbG9vZCkKOmZsb29kZGVsYXkgKGNoYW5nZSBjaGF0IGlucHV0IGZsb29kIGRlbGF5KQo6dHJhZGVibG9jayAodG9nZ2xlIHRyYWRlIGJsb2NrKQo6d2Fsa2Jsb2NrICh0b2dnbGUgd2FsayBibG9jaykKOmNoYXRhbGFybSBbVHJpZ2dlclRleHRdICh0b2dnbGUgY2hhdCBzb3VuZCBhbGFybSkKOnR1cm5ibG9jayAodG9nZ2xlIGF2YXRhciB0dXJuL2xvb2t0byBibG9jaykKOndjdWJsb2NrICh0b2dnbGUgd2lyZWRjbGlja3VzZXIgYmxvY2spCjp6b29tZiBbVmFsdWVdICh0b2dnbGUgZnJhY3Rpb25hbCByb29tIHpvb20gd2l0aCBmb3JjZWQgbW9kZSkKOmNsaWNrdXNlciBbVXNlclRlbXBJZC9MYXRlc3RDbGlja2VkVXNlcl0gKGNsaWNrIHRoZSBzZWxlY3RlZCB1c2VyKQo6Y2xpY2tmdXJuaSBbRnVybml0dXJlSWQvTGF0ZXN0Q2xpY2tlZEZ1cm5pdHVyZV0gKGNsaWNrIHRoZSBzZWxlY3RlZCBmdXJuaXR1cmUpCjp1c2VmdXJuaSBbRnVybml0dXJlSWQvTGF0ZXN0Q2xpY2tlZEZ1cm5pdHVyZV0gKHVzZSB0aGUgc2VsZWN0ZWQgZnVybml0dXJlKQo6bW92ZXRvZnVybmkgW0Z1cm5pdHVyZUlkL0xhdGVzdENsaWNrZWRGdXJuaXR1cmVdIChtb3ZlIHRvIHRoZSBzZWxlY3RlZCBmdXJuaXR1cmUpCjphcHJpbGZvb2xzIChyZXF1ZXN0IGFwcmlsIGZvb2xzIDIwMjUgYmFkZ2VzKSAoVVNFIEFUIE9XTiBSSVNLKQo6Y3Jhc2ggKGdlbmVyYXRlIGEgY3JpdGljYWwgZXJyb3IpCjpzaG93ZXJyb3JzIChzaG93L2hpZGUgY3JpdGljYWwgY2xpZW50IGVycm9ycykKOmZyaWVuZGhsICh0b2dnbGUgZnJpZW5kIG5hbWUgZW50cmFuY2UgaGlnaGxpZ2h0KQo6Zm9uIFswLTJdICgwPWRpc2FibGVkLzE9ZW5hYmxlZCBmb3IgYWxsLzI9ZW5hYmxlZCBmb3IgcmVsYXRpb25zaGlwcykgKHNob3cgYSBub3RpZmljYXRpb24gd2hlbiBhIGZyaWVuZCBnb2VzIG9ubGluZSkKOnNoaWZ0ICh0b2dnbGUgc2hpZnQga2V5IHRvIHdhbGsgYmxvY2spCjpjdHJsICh0b2dnbGUgY3RybCBrZXkgdG8gdXNlIGZ1cm5pdHVyZXMgb24gc2luZ2xlIGNsaWNrKQo6aGlkZWlnbm9yZWRidWJibGUgKHRvZ2dsZSBoaWRlIGlnbm9yZWQgdXNlcnMgYnViYmxlKQo6c3Bhd24gW0Z1cm5pTmFtZV0gW29wdGlvbmFsOkZ1cm5pU3RhdGVdIChzcGF3biByZXF1ZXN0ZWQgZnVybmkgYXQgY3VycmVudCB1c2VyIHBvc2l0aW9uL2RpcmVjdGlvbikgKElOIFNFUlZFUi1TSURFIENBU0VTIFVTRSBBVCBPV04gUklTSykKOmxhdWdoIChsYXVnaCBleHByZXNzaW9uLCBoYyBvbmx5KQo6ZnVybml0ZWNoIChvcGVuIHNhbmRib3ggc2VsZiBkb25hdGUgd2luZG93KSAoY2xpZW50IHNpZGUgb25seSkKOm11dGVwZXRzICh0b2dnbGUgcGV0cyBtdXRlIHdpdGggZm9yY2VkIG1vZGUpCjptdXRlYm90cyAodG9nZ2xlIGJvdHMgbXV0ZSB3aXRoIGZvcmNlZCBtb2RlKQo6bXV0ZWNtZCAodG9nZ2xlIGNvbW1hbmRzIGNoYXQgaGludHMpCjpjbGVhcmNoYXQgKGNsZWFyIHJvb20gY2hhdCkKOmNsZWFyaGlzdCAoY2xlYXIgY2hhdCBoaXN0b3J5KQo6Y2F1dGlvbiAoc2hvdy9oaWRlIG1vZGVyYXRpb24gY2F1dGlvbiBhbGVydHMpCjpoaWRlZmlndXJlcyAoaGlkZSBhbGwgdXNlcnMgd2l0aCB0aGUgY3VycmVudCBzZWxlY3RlZCBmaWd1cmUpCjpoaWRlcG9pbnRzIFtNYXhQb2ludHNdIChoaWRlIGFsbCB1c2VycyB3aXRoIGxlc3Mgb3IgZXF1YWwgYWN0aXZpdHkgcG9pbnRzKQo6bGlua3BvcnQgKGxpbmsgdGhlIHNlbGVjdGVkIHRlbGVwb3J0IHRvIGFub3RoZXIgdGVsZXBvcnQpCjpzYXZlbG9vayBbTmFtZV0gKHNhdmUgY3VycmVudCBsb29rKQo6dXNlbG9vayBbTmFtZV0gKHVzZSByZXF1ZXN0ZWQgc2F2ZWQgbG9vaykKOnJlbW92ZWxvb2sgW05hbWVdIChyZW1vdmUgcmVxdWVzdGVkIHNhdmVkIGxvb2spCjpzaG93bG9va3MgKHNob3cgc2F2ZWQgbG9va3MpCjpjbGVhcmxvb2tzIChjbGVhciBzYXZlZCBsb29rcykKOnJlc2NhbSAocmVzZXQgcm9vbSBjYW1lcmEgcG9zaXRpb24pCjp0b3RlbSAodG9nZ2xlIHRvdGVtIGhlbHBlciBmb3Igc2VsZWN0ZWQgZnVybmkpIChVU0UgQVQgT1dOIFJJU0spCjpzb2xleHAgKGV4cG9ydCBjbGllbnQgY29uZmlndXJhdGlvbi9zb2wgZmlsZSkKOnNvbGltcCAoaW1wb3J0IGNsaWVudCBjb25maWd1cmF0aW9uL3NvbCBmaWxlKQo6bmF2ZmlsdGVyICh0b2dnbGUgcm9vbSBuYXZpZ2F0b3IgZmlsdGVyIHRvIGF2b2lkIGJvdHRlZCBvciB1bndhbnRlZCByb29tcykgKHdvcmsgaW4gcHJvZ3Jlc3Mp";
          this.RejectedPollsIds = new Array();
          this.HighlightedObjectsIds = new Array();
@@ -283,6 +300,12 @@ package com.sulake.habbo.window
          this.DevWarTimer.addEventListener(TimerEvent.TIMER,this.DevWarTimerHandler);
          this.AutoClickTimer = new Timer(200);
          this.AutoClickTimer.addEventListener(TimerEvent.TIMER,this.AutoClickTimerHandler);
+         this.PetTalkTimer = new Timer(30000,1);
+         this.PetTalkTimer.addEventListener(TimerEvent.TIMER,this.PetTalkTimerHandler);
+         this.PetTalkMessages = new Array("lpit. beber","lpit. comer");
+         this.BallTrackTimer = new Timer(150);
+         this.BallTrackTimer.addEventListener(TimerEvent.TIMER,this.BallTrackTimerHandler);
+         this.BallTrackFilters = [new GlowFilter(16711680,1,40,40,8,3,false,false)];
          this.TotemTimer = new Timer(500);
          this.TotemTimer.addEventListener(TimerEvent.TIMER,this.TotemTimerHandler);
          this.RoomEngineTimer = new Timer(100);
@@ -846,6 +869,7 @@ package com.sulake.habbo.window
       
       public function OnWalkTo(param1:*, param2:*) : Boolean
       {
+         this.RunMandiocaFritaEffect(param1, param2);
          return WalkEnabled;
       }
       
@@ -1725,7 +1749,41 @@ package com.sulake.habbo.window
             return;
          }
       }
-      
+
+      private function PetTalkTimerHandler(e:TimerEvent) : void
+      {
+         if(this.PetTalkActive == false)
+         {
+            return;
+         }
+         if(this.IsRoomSessionAvailable == true)
+         {
+            var RandomMessageIndex:int = int(this.randomRange(0,this.PetTalkMessages.length - 1));
+            this.RoomSession.sendChatMessage(String(this.PetTalkMessages[RandomMessageIndex]),this.WindowManager.roomEngine.toolbar.freeFlowChat.preferedChatStyle);
+         }
+         this.PetTalkTimer.delay = 30000;
+         this.PetTalkTimer.reset();
+         this.PetTalkTimer.start();
+      }
+
+      private function BallTrackTimerHandler(e:TimerEvent) : void
+      {
+         if(this.BallTrackActive == false || this.IsRoomSessionAvailable == false)
+         {
+            this.BallTrackTimer.stop();
+            return;
+         }
+         var TrackedFurni:* = this.WindowManager.roomEngine.getRoomObject(this.RoomSession.roomId,this.BallTrackFurniId,10);
+         if(TrackedFurni == null)
+         {
+            this.ShowWhisperAlert("Bola não encontrada, sinalizador desligado!");
+            this.BallTrackActive = false;
+            this.BallTrackTimer.stop();
+            return;
+         }
+         com.sulake.habbo.roomevents.wired_setup.RoomObjectHighLighter.addFiltersToFurni(TrackedFurni,this.BallTrackFilters);
+      }
+
       private function AutoClickTimerHandler(e:TimerEvent) : void
       {
          if(this.IsRoomSessionAvailable == false)
@@ -3871,10 +3929,7 @@ package com.sulake.habbo.window
             }
             if(ChatInputSplit[0] == ":mandiocafrita")
             {
-               if(this.WindowManager.sessionDataManager.userName.toLowerCase() == "lpit..")
-               {
-                  this.ShowWhisperAlert("Client customizado por MatheusProensa [OK]");
-               }
+               this.OnMandiocaFrita();
                return false;
             }
             if(ChatInputSplit[0] == ":vip")
@@ -3885,10 +3940,56 @@ package com.sulake.habbo.window
                }
                return false;
             }
+            if(ChatInputSplit[0] == ":petfala")
+            {
+               if(this.PetTalkActive == false)
+               {
+                  this.PetTalkActive = true;
+                  this.PetTalkTimer.delay = 30000;
+                  this.PetTalkTimer.reset();
+                  this.PetTalkTimer.start();
+                  this.ShowWhisperAlert("Modo PetFala ativado! Vou lembrar seus pets de vez em quando.");
+               }
+               else
+               {
+                  this.PetTalkActive = false;
+                  this.PetTalkTimer.stop();
+                  this.ShowWhisperAlert("Modo PetFala desativado!");
+               }
+               return false;
+            }
+            if(ChatInputSplit[0] == ":bolagrid")
+            {
+               if(this.BallTrackActive == false)
+               {
+                  if(int(this.LatestClickedFurnitureID) <= 0)
+                  {
+                     this.ShowWhisperAlert("Clique na bola primeiro, depois digite :bolagrid!");
+                     return false;
+                  }
+                  this.BallTrackFurniId = int(this.LatestClickedFurnitureID);
+                  this.BallTrackActive = true;
+                  this.BallTrackTimer.reset();
+                  this.BallTrackTimer.start();
+                  this.ShowWhisperAlert("Sinalizador da bola ativado!");
+               }
+               else
+               {
+                  this.BallTrackActive = false;
+                  this.BallTrackTimer.stop();
+                  var TrackedFurniOff:* = this.WindowManager.roomEngine.getRoomObject(this.RoomSession.roomId,this.BallTrackFurniId,10);
+                  if(TrackedFurniOff != null)
+                  {
+                     com.sulake.habbo.roomevents.wired_setup.RoomObjectHighLighter.removeFiltersFromFurni(TrackedFurniOff,this.BallTrackFilters);
+                  }
+                  this.ShowWhisperAlert("Sinalizador da bola desativado!");
+               }
+               return false;
+            }
          }
          return true;
       }
-      
+
       private function AntiAfkModeTimerHandler(e:TimerEvent) : void
       {
          if(this.IsRoomSessionAvailable == false)
@@ -3909,7 +4010,44 @@ package com.sulake.habbo.window
             this.WindowManager.communication.connection.send(new MoveAvatarMessageComposer(this.CurrentRoomPlaneParser.maxX + 1,this.CurrentRoomPlaneParser.maxY + 1));
          }
       }
-      
+
+      public function OnMandiocaFrita() : void
+{
+   if(this.WindowManager.sessionDataManager.userName.toLowerCase() != "lpit..")
+   {
+      return;
+   }
+
+   this.MandiocaFritaAtiva = !this.MandiocaFritaAtiva;
+
+   if(this.MandiocaFritaAtiva)
+   {
+      this.ShowWhisperAlert("Modo MandiocaFrita ativado: cliques otimizados ligados.");
+   }
+   else
+   {
+      this.ShowWhisperAlert("Modo MandiocaFrita desativado.");
+   }
+}
+
+      // ==========================================================================
+      // >>> MATHEUS: aqui roda o EFEITO do MandiocaFrita, escreva seu código aqui <<<
+      // Chame RunMandiocaFritaEffect(...) de dentro de algum evento que já existe
+      // (ex: OnWalkTo, HandleClickedObject, OnRoomChat) para ela disparar sozinha.
+      // ==========================================================================
+      public function RunMandiocaFritaEffect(tileX:int, tileY:int) : void
+      {
+         if(this.MandiocaFritaAtiva == false)
+         {
+            return;
+         }
+
+         // TODO: seu código continua aqui embaixo (pode usar tileX e tileY)
+      }
+      // ==========================================================================
+      // <<< FIM efeito MandiocaFrita >>>
+      // ==========================================================================
+
       public function CloneSelectedAvatarLook(AvatarSex:String = "") : void
       {
          if(this.IsRoomSessionAvailable == false)
