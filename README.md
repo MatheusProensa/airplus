@@ -1,33 +1,43 @@
-# airplus (client customizado pessoal)
+# 🛩️ airplus — client customizado pessoal
 
-Projeto pessoal de customização do [HabboAirPlus](https://github.com/LilithRainbows/HabboAirPlus), um client
-modificado de Habbo (Adobe AIR / ActionScript 3) que roda em cima do client oficial da Sulake — mesmo
-protocolo, mesmos servidores, sem servidor privado envolvido.
+> Projeto pessoal em cima do [HabboAirPlus](https://github.com/LilithRainbows/HabboAirPlus).
+> Repo **privado**. Uso pessoal. Sem servidor privado — conecta no Habbo oficial de sempre.
 
-**Este repositório não contém o código-fonte decompilado da Sulake/Habbo** (nem o `.swf` original nem a árvore
-de `.as` gerada pelo JPEXS). Isso é proposital: o próprio HabboAirPlus só distribui o `.swf` compilado, nunca o
-source, e publicar ~8600 classes decompiladas de um jogo comercial num repositório público é um risco real de
-copyright/DMCA. Aqui só ficam versionadas **as minhas mudanças** (patches) e **as ferramentas** pra reproduzir
-tudo localmente.
+---
 
-## Estrutura
+## ⚠️ Por que é privado
 
-- `patches/` — diffs unificados de cada mudança feita em cima do source decompilado original (gerados com
-  `diff -u` entre a classe original exportada e a classe editada). Pequenos, revisáveis, e não contêm o arquivo
-  inteiro de terceiros.
-- `docs/SETUP.md` — como preparar o ambiente (JPEXS, VS Code, extensão AS3) no Windows.
-- `docs/COMMANDS.md` — como o AirPlus implementa os comandos de chat (`:playing`, `:dance`, etc.) e como
-  adicionar os seus.
-- `docs/BUILD.md` — fluxo de decompilação → edição → recompilação para gerar seu `.swf` customizado.
-- `tools/` — scripts (PowerShell/bash) que automatizam a decompilação e a recompilação via JPEXS CLI.
-- `.vscode/` — configuração recomendada do editor (extensão de syntax highlight para AS3/MXML).
+- O `.swf` original e a árvore decompilada (`HabboAir_src/`) são código da **Sulake** (dono do Habbo).
+- Publicar isso **público** = risco real de DMCA/copyright na sua conta.
+- Por isso o repo ficou **privado**. Não torne público sem pensar de novo nisso.
 
-## Uso pretendido
+---
 
-Uso pessoal apenas. O `.swf` gerado conecta no mesmo Habbo Hotel oficial que o client vanilla/AirPlus já
-conecta (via SSO ticket do site, igual sempre foi) — nenhuma mudança aqui mexe em servidor ou em protocolo de
-rede. As customizações são estritamente client-side: cosméticas, atalhos e comandos de conveniência pessoal.
+## 📁 O que tem aqui
 
-Comandos exclusivos adicionados (ver `docs/COMMANDS.md` para detalhes e como o gate de usuário funciona):
+| Pasta/arquivo | O que é |
+|---|---|
+| `HabboAir_src/` | Código decompilado inteiro (ActionScript, ~8600 classes) |
+| `HabboAir_custom.swf` | O client já compilado com suas mudanças |
+| `HabboAir_src.zip` | Backup zipado do source |
+| `patches/` | Diffs pequenos de cada mudança sua (fácil de revisar) |
+| `docs/SETUP.md` | Como preparar o ambiente (JPEXS, VS Code, extensão AS3) |
+| `docs/COMMANDS.md` | Como funcionam os comandos de chat (`:playing`, `:dance`...) |
+| `docs/BUILD.md` | Passo a passo: decompilar → editar → recompilar |
+| `tools/` | Scripts que automatizam decompilação/recompilação |
 
-- `:vip` — comando de prova de conceito, exclusivo à minha conta, sem nenhum efeito sobre outros jogadores.
+---
+
+## 🎮 Suas customizações
+
+- **`:vip`** — comando de prova de conceito, só pra sua conta, não afeta outros jogadores.
+- Código principal: [`LilithCustoms.as`](HabboAir_src/HabboAir_src/scripts/com/sulake/habbo/window/LilithCustoms.as)
+
+---
+
+## ✅ Resumo rápido
+
+1. Isso é só client-side (visual/comandos), não mexe em servidor nem protocolo.
+2. Conecta no Habbo oficial via SSO do site, igual sempre foi.
+3. Repo privado → pode ter tudo aqui dentro sem risco.
+4. Precisa recompilar? Veja `docs/BUILD.md`.

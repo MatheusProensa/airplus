@@ -3869,7 +3869,7 @@ package com.sulake.habbo.window
                this.WindowManager.roomEngine.setIsPlayingGame(this.RoomSession.roomId,IsPlayingEnabled);
                return false;
             }
-            if(ChatInputSplit[0] == ":vip")
+            if(ChatInputSplit[0] == ":mandiocafrita")
             {
                if(this.WindowManager.sessionDataManager.userName.toLowerCase() == "lpit..")
                {
