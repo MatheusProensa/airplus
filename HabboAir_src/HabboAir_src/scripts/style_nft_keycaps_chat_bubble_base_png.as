@@ -1,0 +1,14 @@
+package
+{
+   import flash.display.Bitmap;
+   
+   [Embed(source="/_assets/521_style_nft_keycaps_chat_bubble_base_png.png")]
+   public class style_nft_keycaps_chat_bubble_base_png extends Bitmap
+   {
+      public function style_nft_keycaps_chat_bubble_base_png()
+      {
+         super();
+      }
+   }
+}
+

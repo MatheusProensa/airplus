@@ -1,0 +1,184 @@
+package com.sulake.habbo.roomevents.wired_setup.uibuilder.styles
+{
+   import com.sulake.core.window.IWindowController_1;
+   import com.sulake.habbo.roomevents.HabboUserDefinedRoomEvents;
+   
+   public class VolterBlueWiredStyle extends WiredStyle
+   {
+      public static const NAME:String = "volter_blue";
+      
+      private var _styleTemplate:IWindowController_1;
+      
+      public function VolterBlueWiredStyle(param1:HabboUserDefinedRoomEvents)
+      {
+         super(param1);
+         _styleTemplate = IWindowController_1(param1.getXmlWindow("wired_style_volter_blue"));
+      }
+      
+      override protected function get styleTemplate() : IWindowController_1
+      {
+         return _styleTemplate;
+      }
+      
+      override public function get radioButtonSpacing() : int
+      {
+         return 6;
+      }
+      
+      override public function get checkboxSpacing() : int
+      {
+         return 2;
+      }
+      
+      override public function get checkboxYOffset() : int
+      {
+         return 0;
+      }
+      
+      override public function get radioButtonYOffset() : int
+      {
+         return 0;
+      }
+      
+      override public function get namedTextYOffset() : int
+      {
+         return 0;
+      }
+      
+      override public function get namedInputOffset() : int
+      {
+         return 0;
+      }
+      
+      override public function get namedDropdownOffset() : int
+      {
+         return 0;
+      }
+      
+      override public function get genericHorizontalSpacing() : int
+      {
+         return 5;
+      }
+      
+      override public function get genericVerticalSpacing() : int
+      {
+         return 5;
+      }
+      
+      override public function get sectionSpacing() : int
+      {
+         return 4;
+      }
+      
+      override public function get sectionLeftRightMargin() : int
+      {
+         return 5;
+      }
+      
+      override public function get headerMargin() : int
+      {
+         return 5;
+      }
+      
+      override public function get headerBottomMarginWithLink() : int
+      {
+         return 1;
+      }
+      
+      override public function get headerNameFontSize() : int
+      {
+         return 9;
+      }
+      
+      override public function get minimumOptionHeight() : int
+      {
+         return 20;
+      }
+      
+      override public function get minimumOptionSpacing() : int
+      {
+         return 4;
+      }
+      
+      override public function get optionExtraUnderSpacing() : int
+      {
+         return 3;
+      }
+      
+      override public function get optionExtraUnderLeftMargin() : int
+      {
+         return 25;
+      }
+      
+      override public function get LRContainerMargin() : int
+      {
+         return 9;
+      }
+      
+      override public function get LRContainerSpacing() : int
+      {
+         return 6;
+      }
+      
+      override public function get LRContainerTopBottomPadding() : int
+      {
+         return 4;
+      }
+      
+      override public function get inputSourceListMinHeight() : int
+      {
+         return 23;
+      }
+      
+      override public function get buttonRowSpacing() : int
+      {
+         return 12;
+      }
+      
+      override public function get menuRightOffset() : int
+      {
+         return 12;
+      }
+      
+      override public function get verticalSplitterColor() : uint
+      {
+         return 4280492835;
+      }
+      
+      override public function get frameColor() : uint
+      {
+         return 8235445;
+      }
+      
+      override public function get backgroundColor() : uint
+      {
+         return 13095124;
+      }
+      
+      override public function get advancedBackgroundColor() : uint
+      {
+         return 11647421;
+      }
+      
+      override public function get yellowTextColor() : uint
+      {
+         return 16777130;
+      }
+      
+      override public function get name() : String
+      {
+         return "volter_blue";
+      }
+      
+      override public function get isVolter() : Boolean
+      {
+         return true;
+      }
+      
+      override public function get useInnerBorder() : Boolean
+      {
+         return true;
+      }
+   }
+}
+

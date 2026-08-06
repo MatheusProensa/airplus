@@ -1,7 +1,4 @@
-# Nunca versionar o SWF original nem a arvore decompilada da Sulake/Habbo
-# (código de terceiros — ver README.md para o motivo). Mantenha isso local.
-*.swf
-HabboAir_src/
+# Repo agora é privado — swf/source decompilado são versionados de propósito.
 HabboAir_src_original/
 import_folder/
 import_test/

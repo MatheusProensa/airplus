@@ -1,0 +1,13 @@
+package com.sulake.iid
+{
+   import com.sulake.core.runtime.IID;
+   
+   public class IIDHabboTalent implements IID
+   {
+      public function IIDHabboTalent()
+      {
+         super();
+      }
+   }
+}
+

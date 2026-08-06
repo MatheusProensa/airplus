@@ -1,0 +1,14 @@
+package
+{
+   import flash.display.Bitmap;
+   
+   [Embed(source="/_assets/1031_memenu_fx_play_1_png.png")]
+   public class memenu_fx_play_1_png extends Bitmap
+   {
+      public function memenu_fx_play_1_png()
+      {
+         super();
+      }
+   }
+}
+

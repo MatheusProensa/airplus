@@ -1,0 +1,20 @@
+package com.sulake.habbo.communication.messages.incoming.inventory.avatareffect
+{
+   import com.sulake.core.communication.messages.MessageEvent;
+   import com.sulake.habbo.communication.messages.parser.inventory.avatareffect.AvatarEffectAddedMessageParser;
+   
+   [SecureSWF(rename="true")]
+   public class AvatarEffectAddedMessageEvent extends MessageEvent
+   {
+      public function AvatarEffectAddedMessageEvent(param1:Function)
+      {
+         super(param1,AvatarEffectAddedMessageParser);
+      }
+      
+      public function getParser() : AvatarEffectAddedMessageParser
+      {
+         return _parser as AvatarEffectAddedMessageParser;
+      }
+   }
+}
+

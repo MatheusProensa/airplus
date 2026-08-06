@@ -1,0 +1,41 @@
+package com.sulake.habbo.communication.messages.parser.users
+{
+   import com.sulake.core.communication.messages.IMessageDataWrapper;
+   import com.sulake.core.communication.messages.IMessageParser;
+   
+   [SecureSWF(rename="true")]
+   public class GuildMemberMgmtFailedMessageParser implements IMessageParser
+   {
+      private var _guildId:int;
+      
+      private var _reason:int;
+      
+      public function GuildMemberMgmtFailedMessageParser()
+      {
+         super();
+      }
+      
+      public function flush() : Boolean
+      {
+         return true;
+      }
+      
+      public function parse(param1:IMessageDataWrapper) : Boolean
+      {
+         _guildId = param1.readInteger();
+         _reason = param1.readInteger();
+         return true;
+      }
+      
+      public function get guildId() : int
+      {
+         return _guildId;
+      }
+      
+      public function get reason() : int
+      {
+         return _reason;
+      }
+   }
+}
+

@@ -1,0 +1,14 @@
+package
+{
+   import flash.utils.ByteArray;
+   
+   [Embed(source="/_assets/1557_suggestion_list_item_new_1_xml.bin", mimeType="application/octet-stream")]
+   public class suggestion_list_item_new_1_xml extends ByteArray
+   {
+      public function suggestion_list_item_new_1_xml()
+      {
+         super();
+      }
+   }
+}
+

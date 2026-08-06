@@ -1,0 +1,21 @@
+package com.sulake.habbo.communication.messages.incoming.friendlist
+{
+   import com.sulake.core.communication.messages.IMessageEvent;
+   import com.sulake.core.communication.messages.MessageEvent;
+   import com.sulake.habbo.communication.messages.parser.friendlist.MiniMailUnreadCountMessageParser;
+   
+   [SecureSWF(rename="true")]
+   public class MiniMailUnreadCountEvent extends MessageEvent implements IMessageEvent
+   {
+      public function MiniMailUnreadCountEvent(param1:Function)
+      {
+         super(param1,MiniMailUnreadCountMessageParser);
+      }
+      
+      public function getParser() : MiniMailUnreadCountMessageParser
+      {
+         return _parser as MiniMailUnreadCountMessageParser;
+      }
+   }
+}
+

@@ -1,0 +1,28 @@
+package com.sulake.habbo.communication.messages.outgoing.users
+{
+   import com.sulake.core.communication.messages.IMessageComposer;
+   
+   [SecureSWF(rename="true")]
+   public class GetHabboGroupDetailsMessageComposer implements IMessageComposer
+   {
+      private var _messageArray:Array = [];
+      
+      public function GetHabboGroupDetailsMessageComposer(param1:int, param2:Boolean)
+      {
+         super();
+         _messageArray.push(param1);
+         _messageArray.push(param2);
+      }
+      
+      public function dispose() : void
+      {
+         _messageArray = null;
+      }
+      
+      public function getMessageArray() : Array
+      {
+         return _messageArray;
+      }
+   }
+}
+

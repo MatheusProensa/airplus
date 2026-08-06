@@ -1,0 +1,14 @@
+package
+{
+   import flash.display.Bitmap;
+   
+   [Embed(source="/_assets/1819_offer_icon_2_1_png.png")]
+   public class offer_icon_2_1_png extends Bitmap
+   {
+      public function offer_icon_2_1_png()
+      {
+         super();
+      }
+   }
+}
+

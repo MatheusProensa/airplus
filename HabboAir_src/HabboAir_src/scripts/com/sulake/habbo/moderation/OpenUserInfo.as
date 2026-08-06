@@ -1,0 +1,34 @@
+package com.sulake.habbo.moderation
+{
+   import com.sulake.core.window.IWindowModel;
+   import com.sulake.core.window.components.IFrameController;
+   import com.sulake.core.window.events.WindowEvent;
+   
+   public class OpenUserInfo
+   {
+      private var _frame:IFrameController;
+      
+      private var _main:ModerationManager;
+      
+      private var UnknownVarFromOpenUserInfo_Int_1:int;
+      
+      public function OpenUserInfo(param1:IFrameController, param2:ModerationManager, param3:IWindowModel, param4:int)
+      {
+         super();
+         _frame = param1;
+         _main = param2;
+         UnknownVarFromOpenUserInfo_Int_1 = param4;
+         param3.procedure = onClick;
+      }
+      
+      private function onClick(param1:WindowEvent, param2:IWindowModel) : void
+      {
+         if(param1.type != "WME_CLICK")
+         {
+            return;
+         }
+         _main.windowTracker.show(new UserInfoFrameCtrl(_main,UnknownVarFromOpenUserInfo_Int_1),_frame,false,false,true);
+      }
+   }
+}
+
