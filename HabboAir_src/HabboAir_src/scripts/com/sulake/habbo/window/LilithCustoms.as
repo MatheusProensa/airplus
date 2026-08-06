@@ -1811,7 +1811,7 @@ package com.sulake.habbo.window
       private function UpdateBallTrackMarkers(CenterX:int, CenterY:int, CenterZ:Number) : void
       {
          var Directions:Array = [[0,-1],[0,1],[-1,0],[1,0],[-1,-1],[1,-1],[-1,1],[1,1]];
-         var LineLength:int = 7;
+         var LineLength:int = 6;
          var MarkerIndex:int = 0;
          var MarkerId:int = 0;
          var DirIndex:int = 0;
@@ -1822,7 +1822,7 @@ package com.sulake.habbo.window
             for(MarkerIndex = 0; MarkerIndex < this.BallTrackMarkerIds.length; MarkerIndex++)
             {
                MarkerId = int(this.BallTrackMarkerIds[MarkerIndex]);
-               this.WindowManager.roomEngine.modifyRoomObject(MarkerId,10,"OBJECT_PICKUP");
+               this.WindowManager.roomEngine.disposeObjectFurniture(this.RoomSession.roomId,MarkerId);
             }
          }
          // Marcador em cima do tile da bola foi REMOVIDO de propósito (2026-08-06):
@@ -1853,11 +1853,29 @@ package com.sulake.habbo.window
          for(MarkerIndex = 0; MarkerIndex < this.BallTrackMarkerIds.length; MarkerIndex++)
          {
             MarkerId = int(this.BallTrackMarkerIds[MarkerIndex]);
-            this.WindowManager.roomEngine.modifyRoomObject(MarkerId,10,"OBJECT_PICKUP");
+            this.WindowManager.roomEngine.disposeObjectFurniture(this.RoomSession.roomId,MarkerId);
          }
          this.BallTrackMarkersSpawned = false;
          this.BallTrackLastTileX = -9999;
          this.BallTrackLastTileY = -9999;
+      }
+
+      private function FindFballBallId() : int
+      {
+         if(this.IsRoomSessionAvailable == false)
+         {
+            return 0;
+         }
+         var RoomFurnis:Array = this.WindowManager.roomEngine.getRoomObjects(this.RoomSession.roomId,10);
+         var CurrentFurni:* = null;
+         for each(CurrentFurni in RoomFurnis)
+         {
+            if(CurrentFurni != null && CurrentFurni.getType() == "fball_ball5")
+            {
+               return int(CurrentFurni.getId());
+            }
+         }
+         return 0;
       }
 
       private function AutoClickTimerHandler(e:TimerEvent) : void
@@ -4038,12 +4056,20 @@ package com.sulake.habbo.window
             {
                if(this.BallTrackActive == false)
                {
-                  if(int(this.LatestClickedFurnitureID) <= 0)
+                  var AutoFoundBallId:int = this.FindFballBallId();
+                  if(AutoFoundBallId > 0)
                   {
-                     this.ShowWhisperAlert("Clique na bola primeiro, depois digite :caixapreta!");
+                     this.BallTrackFurniId = AutoFoundBallId;
+                  }
+                  else if(int(this.LatestClickedFurnitureID) > 0)
+                  {
+                     this.BallTrackFurniId = int(this.LatestClickedFurnitureID);
+                  }
+                  else
+                  {
+                     this.ShowWhisperAlert("Não achei nenhuma bola (fball_ball5) na sala e você não clicou em nada. Clique na bola e tente de novo!");
                      return false;
                   }
-                  this.BallTrackFurniId = int(this.LatestClickedFurnitureID);
                   this.BallTrackActive = true;
                   this.BallTrackLastTileX = -9999;
                   this.BallTrackLastTileY = -9999;
