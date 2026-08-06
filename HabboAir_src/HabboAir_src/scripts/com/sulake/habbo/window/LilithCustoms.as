@@ -314,7 +314,7 @@ package com.sulake.habbo.window
          this.BallTrackTimer = new Timer(250);
          this.BallTrackTimer.addEventListener(TimerEvent.TIMER,this.BallTrackTimerHandler);
          this.BallTrackFilters = [new GlowFilter(16711680,1,40,40,8,3,false,false)];
-         this.BallTrackMarkerIds = new Array(900001,900002,900003,900004,900005,900006,900007,900008);
+         this.BallTrackMarkerIds = new Array(900000,900001,900002,900003,900004,900005,900006,900007,900008,900009,900010,900011,900012,900013,900014,900015,900016,900017,900018,900019,900020,900021,900022,900023,900024);
          this.TotemTimer = new Timer(500);
          this.TotemTimer.addEventListener(TimerEvent.TIMER,this.TotemTimerHandler);
          this.RoomEngineTimer = new Timer(100);
@@ -1792,15 +1792,9 @@ package com.sulake.habbo.window
             return;
          }
          com.sulake.habbo.roomevents.wired_setup.RoomObjectHighLighter.addFiltersToFurni(TrackedFurni,this.BallTrackFilters);
-         var BallLocation:* = TrackedFurni.getLocation();
-         var BallTileX:int = int(BallLocation.x);
-         var BallTileY:int = int(BallLocation.y);
-         if(BallTileX != this.BallTrackLastTileX || BallTileY != this.BallTrackLastTileY)
-         {
-            this.UpdateBallTrackMarkers(BallTileX,BallTileY,BallLocation.z);
-            this.BallTrackLastTileX = BallTileX;
-            this.BallTrackLastTileY = BallTileY;
-         }
+         // NOTA: spawn de blocos (UpdateBallTrackMarkers) desativado por segurança em
+         // 2026-08-06 — causou travamento de interação com a bola em teste ao vivo.
+         // Ver docs/IDEAS.md pra investigação/causa antes de reativar.
       }
 
       private function UpdateBallTrackMarkers(CenterX:int, CenterY:int, CenterZ:Number) : void

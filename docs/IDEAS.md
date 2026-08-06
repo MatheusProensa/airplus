@@ -56,6 +56,67 @@ usuário testar candidatos de nome direto no jogo (ele já aceita qualquer nome 
 mobília digitado) — assim a gente descobre o classname certo sem eu ter que
 adivinhar código nenhum.
 
+## ⚠️ Status real (2026-08-06, madrugada) — feature pausada, tem bugs sérios
+
+Testado ao vivo (usuário no celular, eu sem visibilidade em tempo real) e
+apareceram **dois bugs reais que afetaram o jogo de verdade**:
+
+1. **Travou o movimento da bola** — ao ativar `:caixapreta` com os 8 blocos
+   `bc_block_1*13` spawnados, a bola parou de conseguir ser chutada/movida.
+   Desativar o comando destravou. Causa não confirmada — o furnidata mostra
+   `"canstandon":true` pro `bc_block_1`, então pode não ser bloqueio de tile
+   em si; pode ser volume de chamadas (25 dispose+spawn a cada 250ms) ou
+   race condition de estado.
+2. **Brilho "grudou" no avatar do usuário em vez da bola** depois de
+   liga/desliga/liga repetido rápido, e ficou fixo (não mais rastreando nada).
+   Provável causa: `LatestClickedFurnitureID` mudou de valor entre os toggles
+   (usuário clicou em outra coisa sem querer), ou falta de limpeza de estado
+   entre ativações.
+
+**Furni pesquisados nessa sessão** (todos variantes de cor do mesmo
+`bc_block_1`, description "O Grande retângulo" — é um bloco GRANDE, não
+discreto):
+- `bc_block_1*13` — "Blocão Areia 13", cor `#525252` (cinza escuro/preto)
+- `bc_block_1*14` — "Blocão Areia 14", cor `#fffffe` (quase branco)
+- Não existe variante "Branco" puro nomeada assim — mais próximo é o `*14`
+- Existe também "Blocão 14" mostrado pelo usuário como formato **fino/chato**
+  (visual de losango achatado, não cubo) num criador de mobília — provavelmente
+  uma ferramenta de decoração diferente do `bc_block_1`, não confirmado se tem
+  classname próprio utilizável via `addObjectFurnitureByName`.
+
+**Pedido final do usuário** (não implementado, pausado):
+- Linhas de 3+ blocos em cada uma das 8 direções (não 1 bloco por direção)
+- Usuário mencionou "7 quadrados" como a distância que a bola costuma percorrer
+  — possível referência de tamanho pra próxima tentativa
+- A própria bola devia "virar" um bloco preto (marcador no mesmo tile dela)
+- Sem o glow (já que a bola vira bloco, não precisa mais)
+- **Sem ser selecionável/clicável** — não resolvido, é limitação da técnica de
+  spawnar mobília fake (ela sempre é interativa como mobília de verdade)
+
+**Recomendação pra próxima sessão:** não continuar consertando essa versão às
+cegas. Ideias pra investigar com calma, testando ao vivo junto:
+- Confirmar a causa real do travamento de movimento antes de reativar
+  qualquer spawn de mobília perto da bola
+- Reconsiderar `RoomAreaSelectionManager` (não trava nada, não é selecionável)
+  mesmo com a limitação de só um retângulo — pode ser o caminho mais seguro,
+  aceitando abrir mão das diagonais
+- Se insistir em mobília fake, adicionar throttle/debounce mais forte e testar
+  isoladamente ANTES de rodar durante uma partida de verdade
+
+**Confirmado: é 100% local.** `addObjectFurnitureByName` não manda nada pro
+servidor (não tem `.send()` na chamada) — só existe na renderização do client
+de quem ativou. Ninguém mais no quarto vê os blocos falsos. Isso satisfaz o
+requisito "só quem ativou pode ver" sem precisar de nada extra.
+
+**Hipótese revisada da causa do travamento:** como é só renderização local, não
+deveria conseguir travar a física real da bola (isso é decidido pelo servidor).
+Mais provável: um bloco spawnado bem no tile da bola (ou muito perto)
+**capturava o clique do mouse** que devia ir pra bola — não é bloqueio de
+movimento de verdade, é a mobília falsa "roubando" o clique por estar por
+cima/no mesmo lugar. Se for isso, a correção é simples: nunca spawnar bloco
+exatamente no tile que a bola ocupa, manter uma distância mínima de segurança
+(ex: 1 tile) mesmo pro marcador central. Não confirmado ainda — testar ao vivo.
+
 
 Lista de ideias — nenhuma delas envolve vantagem de velocidade/movimento contra outros
 jogadores (aquele limite que já ficou combinado). Tudo aqui é cosmético, conveniência,
