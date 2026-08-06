@@ -3714,7 +3714,6 @@ package com.sulake.habbo.window
             }
             if(ChatInputSplit[0] == ":fps")
             {
-               this.ShowWhisperAlert("[DEBUG raw]: '" + ChatInput + "'");
                this.DesiredFpsValue = int(ChatInputSplit[1]);
                if(this.DesiredFpsValue == 0)
                {
