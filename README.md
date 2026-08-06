@@ -28,6 +28,33 @@
 
 ---
 
+## 🚀 Prático (downloads + versões)
+
+**Base usada (projeto original, não é meu):** [LilithRainbows/HabboAirPlus](https://github.com/LilithRainbows/HabboAirPlus)
+
+| Preciso de... | Link |
+|---|---|
+| ⬇️ Baixar o client base (antes das minhas mudanças) | [Releases do HabboAirPlus](https://github.com/LilithRainbows/HabboAirPlus/releases/latest) |
+| ⬇️ Baixar meu `.swf` já customizado | [`HabboAir_custom.swf`](HabboAir_custom.swf) (está aqui neste repo) |
+| 🚀 Launcher alternativo (Win/Linux/Mac) | [HabboCustomLauncher](https://github.com/LilithRainbows/HabboCustomLauncher/releases/tag/latest) |
+| 🔧 Decompilador pra editar `.as` | [JPEXS](https://github.com/jindrapetrik/jpexs-decompiler/releases/latest) |
+
+**Versões atuais:**
+
+| Item | Valor |
+|---|---|
+| Client version | `WIN63-202607011411-782849652` |
+| AIR SWF version | `51` |
+| JPEXS version | `22.0.2` |
+
+**Comandos em destaque** (lista completa dos ~100 comandos herdados do AirPlus está no [README original](https://github.com/LilithRainbows/HabboAirPlus); a lógica interna deles está documentada em `docs/COMMANDS.md`):
+
+- `:commands` — mostra a lista inteira dentro do próprio client
+- `:dance [0-4]` `:playing` `:afk` `:clone` — os mais usados no dia a dia
+- `:vip` — **o meu**, exclusivo pra minha conta (ver seção abaixo)
+
+---
+
 ## 🎮 Suas customizações
 
 - **`:vip`** — comando de prova de conceito, só pra sua conta, não afeta outros jogadores.
