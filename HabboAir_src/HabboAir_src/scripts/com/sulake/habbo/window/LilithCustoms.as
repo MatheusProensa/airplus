@@ -1837,9 +1837,23 @@ package com.sulake.habbo.window
          var BallBoxId:int = int(this.BallTrackMarkerIds[this.BallTrackMarkerIds.length - 1]);
          this.WindowManager.roomEngine.addObjectFurnitureByName(this.RoomSession.roomId,BallBoxId,"bc_block_1",new Vector3d(CenterX,CenterY,CenterZ),new Vector3d(0),0,new EmptyStuffData());
          this.SetFurnitureColorIndex(BallBoxId,13);
-         var RoomGeometry:* = this.WindowManager.roomEngine.getLegacyGeometry(this.RoomSession.roomId);
+         var PitchBoxes:Array = new Array();
+         var RoomFurnisForPitch:Array = this.WindowManager.roomEngine.getRoomObjects(this.RoomSession.roomId,10);
+         var PitchFurni:* = null;
+         var PitchLoc:* = null;
+         for each(PitchFurni in RoomFurnisForPitch)
+         {
+            if(PitchFurni != null && String(PitchFurni.getType()).indexOf("fball_ptch") == 0)
+            {
+               PitchLoc = PitchFurni.getLocation();
+               PitchBoxes.push([int(PitchLoc.x) - 1,int(PitchLoc.y) - 1,int(PitchLoc.x) + 1,int(PitchLoc.y) + 1]);
+            }
+         }
          var TargetX:int = 0;
          var TargetY:int = 0;
+         var IsOnPitch:Boolean = false;
+         var BoxIndex:int = 0;
+         var PitchBox:Array = null;
          MarkerIndex = 0;
          for(DirIndex = 0; DirIndex < Directions.length; DirIndex++)
          {
@@ -1849,7 +1863,17 @@ package com.sulake.habbo.window
                MarkerId = int(this.BallTrackMarkerIds[MarkerIndex]);
                TargetX = CenterX + int(DirOffset[0]) * DistIndex;
                TargetY = CenterY + int(DirOffset[1]) * DistIndex;
-               if(RoomGeometry != null && RoomGeometry.isRoomTile(TargetX,TargetY))
+               IsOnPitch = PitchBoxes.length == 0;
+               for(BoxIndex = 0; BoxIndex < PitchBoxes.length; BoxIndex++)
+               {
+                  PitchBox = PitchBoxes[BoxIndex];
+                  if(TargetX >= PitchBox[0] && TargetX <= PitchBox[2] && TargetY >= PitchBox[1] && TargetY <= PitchBox[3])
+                  {
+                     IsOnPitch = true;
+                     break;
+                  }
+               }
+               if(IsOnPitch)
                {
                   this.WindowManager.roomEngine.addObjectFurnitureByName(this.RoomSession.roomId,MarkerId,"tile_marble",new Vector3d(TargetX,TargetY,CenterZ),new Vector3d(0),0,new EmptyStuffData());
                }
