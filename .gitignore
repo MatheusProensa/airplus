@@ -1,0 +1,18 @@
+# Nunca versionar o SWF original nem a arvore decompilada da Sulake/Habbo
+# (código de terceiros — ver README.md para o motivo). Mantenha isso local.
+*.swf
+HabboAir_src/
+HabboAir_src_original/
+import_folder/
+import_test/
+verify/
+pristine/
+vendor/
+
+# JPEXS
+ffdec/
+ffdec.zip
+
+# Sistema
+.DS_Store
+Thumbs.db

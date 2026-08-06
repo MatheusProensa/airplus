@@ -1,0 +1,13 @@
+{
+  "files.associations": {
+    "*.as": "actionscript3"
+  },
+  "files.exclude": {
+    "**/HabboAir_src": true,
+    "**/HabboAir.swf": true,
+    "**/HabboAir_custom.swf": true
+  },
+  "search.exclude": {
+    "**/HabboAir_src": true
+  }
+}
