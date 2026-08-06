@@ -1820,7 +1820,7 @@ package com.sulake.habbo.window
       private function UpdateBallTrackMarkers(CenterX:int, CenterY:int, CenterZ:Number) : void
       {
          var Directions:Array = [[0,-1],[0,1],[-1,0],[1,0],[-1,-1],[1,-1],[-1,1],[1,1]];
-         var LineLength:int = 4;
+         var LineLength:int = 6;
          var MarkerIndex:int = 0;
          var MarkerId:int = 0;
          var DirIndex:int = 0;
