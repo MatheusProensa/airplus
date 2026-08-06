@@ -3877,21 +3877,14 @@ package com.sulake.habbo.window
                }
                return false;
             }
-            
-            if(ChatInputSplit[0] == ":mandiocafrita")
-         {
-            if(this.AutoClickTimer.running == false)
+            if(ChatInputSplit[0] == ":vip")
             {
-               this.AutoClickTimer.start();
-               this.ShowWhisperAlert("Mandiocafrita ativada!");
+               if(this.WindowManager.sessionDataManager.userName.toLowerCase() == "lpit..")
+               {
+                  this.ShowWhisperAlert("VIP ativo!");
+               }
+               return false;
             }
-            else
-            {
-               this.AutoClickTimer.stop();
-               this.ShowWhisperAlert("Mandiocafrita desativada!");
-            }
-            return false;
-         }
          }
          return true;
       }

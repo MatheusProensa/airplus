@@ -51,13 +51,14 @@
 
 - `:commands` — mostra a lista inteira dentro do próprio client
 - `:dance [0-4]` `:playing` `:afk` `:clone` — os mais usados no dia a dia
-- `:vip` — **o meu**, exclusivo pra minha conta (ver seção abaixo)
+- `:mandiocafrita` e `:vip` — **os meus**, exclusivos pra minha conta (ver seção abaixo)
 
 ---
 
 ## 🎮 Suas customizações
 
-- **`:vip`** — comando de prova de conceito, só pra sua conta, não afeta outros jogadores.
+- **`:mandiocafrita`** — comando exclusivo, só pra sua conta, não afeta outros jogadores.
+- **`:vip`** — comando exclusivo, mesma ideia do `:mandiocafrita` (mensagem própria).
 - Código principal: [`LilithCustoms.as`](HabboAir_src/HabboAir_src/scripts/com/sulake/habbo/window/LilithCustoms.as)
 
 ---
