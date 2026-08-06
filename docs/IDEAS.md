@@ -56,16 +56,13 @@ usuário testar candidatos de nome direto no jogo (ele já aceita qualquer nome 
 mobília digitado) — assim a gente descobre o classname certo sem eu ter que
 adivinhar código nenhum.
 
-## 🐾 Implementado (2026-08-06, noite) — :petfala usa as taças de leite
+## ✅ Concluído (2026-08-06, noite) — :petfala usa as taças de leite
 
-Classname achado no furnidata: `milkbowl` (categoria "pets"). `:petfala`
-agora, a cada ciclo de 10s, chama `useRoomObjectInActiveRoom` em toda taça
-de leite da sala (mesma chamada que o `:autoclick` já usa) — **sem checar
-se está cheia/vazia**, por pedido do usuário (reabastece mesmo que não
-esteja vazia). Ainda não confirmado ao vivo se isso já reabastece de
-verdade (se o clique já consome item do inventário automaticamente,
-padrão comum em vários móveis de pet do Habbo) ou se precisaria de uma
-segunda etapa explícita de "usar item do inventário na mobília".
+Classname: `milkbowl` (categoria "pets"). `:petfala`, a cada ciclo de 10s,
+chama `useRoomObjectInActiveRoom` em toda taça de leite da sala — sem checar
+estado cheio/vazio, por pedido do usuário. **Confirmado ao vivo**: sala de
+teste tinha 20+ taças, todas encontradas e usadas a cada ciclo (estados
+variando 0-5 antes do uso). Debug removido depois da confirmação.
 
 ## 🔧 Pendente (2026-08-06, manhã) — vazamento de marcador pra fora da sala
 
