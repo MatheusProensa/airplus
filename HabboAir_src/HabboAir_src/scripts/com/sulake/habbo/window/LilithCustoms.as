@@ -140,7 +140,7 @@ package com.sulake.habbo.window
       internal var RoomEngineTimer:Timer;
       
       internal var DesiredFpsValue:int;
-      
+
       internal var AnimationFpsUnlocked:*;
       
       internal var ObjectHighlighter:*;
@@ -316,7 +316,7 @@ package com.sulake.habbo.window
          this.AutoClickTimer.addEventListener(TimerEvent.TIMER,this.AutoClickTimerHandler);
          this.PetTalkTimer = new Timer(30000,1);
          this.PetTalkTimer.addEventListener(TimerEvent.TIMER,this.PetTalkTimerHandler);
-         this.PetTalkMessages = new Array("lpit. beber","lpit. comer");
+         this.PetTalkMessages = new Array("lPit. bebe");
          this.BallTrackTimer = new Timer(20);
          this.BallTrackTimer.addEventListener(TimerEvent.TIMER,this.BallTrackTimerHandler);
          this.BallTrackFilters = [new GlowFilter(16711680,1,40,40,8,3,false,false)];
@@ -1785,7 +1785,7 @@ package com.sulake.habbo.window
             var RandomMessageIndex:int = int(this.randomRange(0,this.PetTalkMessages.length - 1));
             this.RoomSession.sendChatMessage(String(this.PetTalkMessages[RandomMessageIndex]),this.WindowManager.roomEngine.toolbar.freeFlowChat.preferedChatStyle);
          }
-         this.PetTalkTimer.delay = 30000;
+         this.PetTalkTimer.delay = 10000;
          this.PetTalkTimer.reset();
          this.PetTalkTimer.start();
       }
@@ -4148,7 +4148,7 @@ package com.sulake.habbo.window
                if(this.PetTalkActive == false)
                {
                   this.PetTalkActive = true;
-                  this.PetTalkTimer.delay = 30000;
+                  this.PetTalkTimer.delay = 10000;
                   this.PetTalkTimer.reset();
                   this.PetTalkTimer.start();
                   this.ShowWhisperAlert("Modo PetFala ativado! Vou lembrar seus pets de vez em quando.");
