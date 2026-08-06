@@ -1930,21 +1930,12 @@ package com.sulake.habbo.window
          }
          var RoomFurnis:Array = this.WindowManager.roomEngine.getRoomObjects(this.RoomSession.roomId,10);
          var CurrentFurni:* = null;
-         var BowlCount:int = 0;
-         var BowlStateBefore:int = 0;
          for each(CurrentFurni in RoomFurnis)
          {
             if(CurrentFurni != null && CurrentFurni.getType() == "milkbowl")
             {
-               BowlCount++;
-               BowlStateBefore = int(CurrentFurni.getState(0));
                this.WindowManager.roomEngine.useRoomObjectInActiveRoom(int(CurrentFurni.getId()),10);
-               this.ShowWhisperAlert("[DEBUG] Taça ID:" + CurrentFurni.getId() + " state antes:" + BowlStateBefore);
             }
-         }
-         if(BowlCount == 0)
-         {
-            this.ShowWhisperAlert("[DEBUG] Nenhuma taça de leite (milkbowl) encontrada na sala!");
          }
       }
 
