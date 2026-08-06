@@ -56,6 +56,19 @@ usuário testar candidatos de nome direto no jogo (ele já aceita qualquer nome 
 mobília digitado) — assim a gente descobre o classname certo sem eu ter que
 adivinhar código nenhum.
 
+## 🐾 Pendente (2026-08-06, noite) — :petfala interagir de verdade com as taças
+
+Ideia pro `:petfala`: além de falar "lPit. bebe", periodicamente **usar de
+verdade** as "Taças de Leite" da sala (clicar/usar o móvel, não só anunciar) —
+e também **repor automaticamente** as taças que ficam vazias (usar item do
+inventário pra encher de novo). Precisa investigar:
+- Como detectar taças vazias (provavelmente um `state`/`furniture_extra` no
+  model do objeto, como em `GetFurnitureState`)
+- Comando de "usar objeto" já existe (`useRoomObjectInActiveRoom`, usado pelo
+  `:autoclick`) — reaproveitar
+- Reposição automática de item de inventário é mais complexo, precisa
+  investigar a API de inventário/catálogo
+
 ## 🔧 Pendente (2026-08-06, manhã) — vazamento de marcador pra fora da sala
 
 `:caixapreta` funcionando bem (bola vira caixa, linhas seguem, sem travar
