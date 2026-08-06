@@ -169,6 +169,10 @@ package com.sulake.habbo.window
 
       internal var PetTalkMessages:Array;
 
+      internal var MilkBowlQueue:Array;
+
+      internal var MilkBowlTimer:Timer;
+
       public var BallTrackActive:Boolean = false;
 
       internal var BallTrackFurniId:int = 0;
@@ -316,7 +320,10 @@ package com.sulake.habbo.window
          this.AutoClickTimer.addEventListener(TimerEvent.TIMER,this.AutoClickTimerHandler);
          this.PetTalkTimer = new Timer(30000,1);
          this.PetTalkTimer.addEventListener(TimerEvent.TIMER,this.PetTalkTimerHandler);
-         this.PetTalkMessages = new Array("lPit. bebe");
+         this.PetTalkMessages = new Array("lPit. bebe","Crazy bebe","-lMatheus. bebe");
+         this.MilkBowlQueue = new Array();
+         this.MilkBowlTimer = new Timer(600);
+         this.MilkBowlTimer.addEventListener(TimerEvent.TIMER,this.MilkBowlTimerHandler);
          this.BallTrackTimer = new Timer(20);
          this.BallTrackTimer.addEventListener(TimerEvent.TIMER,this.BallTrackTimerHandler);
          this.BallTrackFilters = [new GlowFilter(16711680,1,40,40,8,3,false,false)];
@@ -1654,6 +1661,8 @@ package com.sulake.habbo.window
          this.BallTrackLastTileX = -9999;
          this.BallTrackLastTileY = -9999;
          this.BallTrackTimer.stop();
+         this.MilkBowlTimer.stop();
+         this.MilkBowlQueue = new Array();
          this.FurniHideActive = false;
          this.HiddenFurniData = new Array();
          this.SpawnHelperTimer.stop();
@@ -1930,12 +1939,33 @@ package com.sulake.habbo.window
          }
          var RoomFurnis:Array = this.WindowManager.roomEngine.getRoomObjects(this.RoomSession.roomId,10);
          var CurrentFurni:* = null;
+         this.MilkBowlQueue = new Array();
          for each(CurrentFurni in RoomFurnis)
          {
             if(CurrentFurni != null && CurrentFurni.getType() == "milkbowl")
             {
-               this.WindowManager.roomEngine.useRoomObjectInActiveRoom(int(CurrentFurni.getId()),10);
+               this.MilkBowlQueue.push(int(CurrentFurni.getId()));
             }
+         }
+         this.MilkBowlTimer.stop();
+         if(this.MilkBowlQueue.length > 0)
+         {
+            this.MilkBowlTimer.start();
+         }
+      }
+
+      private function MilkBowlTimerHandler(e:TimerEvent) : void
+      {
+         if(this.PetTalkActive == false || this.IsRoomSessionAvailable == false || this.MilkBowlQueue.length == 0)
+         {
+            this.MilkBowlTimer.stop();
+            return;
+         }
+         var NextBowlId:int = int(this.MilkBowlQueue.shift());
+         this.WindowManager.roomEngine.useRoomObjectInActiveRoom(NextBowlId,10);
+         if(this.MilkBowlQueue.length == 0)
+         {
+            this.MilkBowlTimer.stop();
          }
       }
 
@@ -4175,6 +4205,8 @@ package com.sulake.habbo.window
                {
                   this.PetTalkActive = false;
                   this.PetTalkTimer.stop();
+                  this.MilkBowlTimer.stop();
+                  this.MilkBowlQueue = new Array();
                   this.ShowWhisperAlert("Modo PetFala desativado!");
                }
                return false;
