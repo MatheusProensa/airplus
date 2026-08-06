@@ -177,6 +177,14 @@ package com.sulake.habbo.window
 
       internal var BallTrackFilters:Array;
 
+      internal var BallTrackMarkerIds:Array;
+
+      internal var BallTrackMarkersSpawned:Boolean = false;
+
+      internal var BallTrackLastTileX:int = -9999;
+
+      internal var BallTrackLastTileY:int = -9999;
+
       internal var DevWarTimer:Timer;
       
       internal var TitleBarColor:uint;
@@ -303,9 +311,10 @@ package com.sulake.habbo.window
          this.PetTalkTimer = new Timer(30000,1);
          this.PetTalkTimer.addEventListener(TimerEvent.TIMER,this.PetTalkTimerHandler);
          this.PetTalkMessages = new Array("lpit. beber","lpit. comer");
-         this.BallTrackTimer = new Timer(150);
+         this.BallTrackTimer = new Timer(250);
          this.BallTrackTimer.addEventListener(TimerEvent.TIMER,this.BallTrackTimerHandler);
          this.BallTrackFilters = [new GlowFilter(16711680,1,40,40,8,3,false,false)];
+         this.BallTrackMarkerIds = new Array(900001,900002,900003,900004,900005,900006,900007,900008);
          this.TotemTimer = new Timer(500);
          this.TotemTimer.addEventListener(TimerEvent.TIMER,this.TotemTimerHandler);
          this.RoomEngineTimer = new Timer(100);
@@ -1779,9 +1788,61 @@ package com.sulake.habbo.window
             this.ShowWhisperAlert("Bola não encontrada, sinalizador desligado!");
             this.BallTrackActive = false;
             this.BallTrackTimer.stop();
+            this.ClearBallTrackMarkers();
             return;
          }
          com.sulake.habbo.roomevents.wired_setup.RoomObjectHighLighter.addFiltersToFurni(TrackedFurni,this.BallTrackFilters);
+         var BallLocation:* = TrackedFurni.getLocation();
+         var BallTileX:int = int(BallLocation.x);
+         var BallTileY:int = int(BallLocation.y);
+         if(BallTileX != this.BallTrackLastTileX || BallTileY != this.BallTrackLastTileY)
+         {
+            this.UpdateBallTrackMarkers(BallTileX,BallTileY,BallLocation.z);
+            this.BallTrackLastTileX = BallTileX;
+            this.BallTrackLastTileY = BallTileY;
+         }
+      }
+
+      private function UpdateBallTrackMarkers(CenterX:int, CenterY:int, CenterZ:Number) : void
+      {
+         var DirectionOffsets:Array = [[0,-2],[0,2],[-2,0],[2,0],[-2,-2],[2,-2],[-2,2],[2,2]];
+         var MarkerIndex:int = 0;
+         var MarkerId:int = 0;
+         var MarkerOffset:Array = null;
+         if(this.BallTrackMarkersSpawned)
+         {
+            for(MarkerIndex = 0; MarkerIndex < this.BallTrackMarkerIds.length; MarkerIndex++)
+            {
+               MarkerId = int(this.BallTrackMarkerIds[MarkerIndex]);
+               this.WindowManager.roomEngine.modifyRoomObject(MarkerId,10,"OBJECT_PICKUP");
+            }
+         }
+         for(MarkerIndex = 0; MarkerIndex < this.BallTrackMarkerIds.length; MarkerIndex++)
+         {
+            MarkerId = int(this.BallTrackMarkerIds[MarkerIndex]);
+            MarkerOffset = DirectionOffsets[MarkerIndex];
+            this.WindowManager.roomEngine.addObjectFurnitureByName(this.RoomSession.roomId,MarkerId,"bc_block_1",new Vector3d(CenterX + int(MarkerOffset[0]),CenterY + int(MarkerOffset[1]),CenterZ),new Vector3d(0),0,new EmptyStuffData());
+            this.SetFurnitureColorIndex(MarkerId,13);
+         }
+         this.BallTrackMarkersSpawned = true;
+      }
+
+      private function ClearBallTrackMarkers() : void
+      {
+         var MarkerIndex:int = 0;
+         var MarkerId:int = 0;
+         if(this.BallTrackMarkersSpawned == false)
+         {
+            return;
+         }
+         for(MarkerIndex = 0; MarkerIndex < this.BallTrackMarkerIds.length; MarkerIndex++)
+         {
+            MarkerId = int(this.BallTrackMarkerIds[MarkerIndex]);
+            this.WindowManager.roomEngine.modifyRoomObject(MarkerId,10,"OBJECT_PICKUP");
+         }
+         this.BallTrackMarkersSpawned = false;
+         this.BallTrackLastTileX = -9999;
+         this.BallTrackLastTileY = -9999;
       }
 
       private function AutoClickTimerHandler(e:TimerEvent) : void
@@ -3969,6 +4030,8 @@ package com.sulake.habbo.window
                   }
                   this.BallTrackFurniId = int(this.LatestClickedFurnitureID);
                   this.BallTrackActive = true;
+                  this.BallTrackLastTileX = -9999;
+                  this.BallTrackLastTileY = -9999;
                   this.BallTrackTimer.reset();
                   this.BallTrackTimer.start();
                   this.ShowWhisperAlert("Sinalizador da bola ativado!");
@@ -3982,6 +4045,7 @@ package com.sulake.habbo.window
                   {
                      com.sulake.habbo.roomevents.wired_setup.RoomObjectHighLighter.removeFiltersFromFurni(TrackedFurniOff,this.BallTrackFilters);
                   }
+                  this.ClearBallTrackMarkers();
                   this.ShowWhisperAlert("Sinalizador da bola desativado!");
                }
                return false;
