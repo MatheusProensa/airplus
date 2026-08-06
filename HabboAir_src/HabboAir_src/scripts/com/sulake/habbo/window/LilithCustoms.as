@@ -311,7 +311,7 @@ package com.sulake.habbo.window
          this.PetTalkTimer = new Timer(30000,1);
          this.PetTalkTimer.addEventListener(TimerEvent.TIMER,this.PetTalkTimerHandler);
          this.PetTalkMessages = new Array("lpit. beber","lpit. comer");
-         this.BallTrackTimer = new Timer(800);
+         this.BallTrackTimer = new Timer(450);
          this.BallTrackTimer.addEventListener(TimerEvent.TIMER,this.BallTrackTimerHandler);
          this.BallTrackFilters = [new GlowFilter(16711680,1,40,40,8,3,false,false)];
          this.BallTrackMarkerIds = new Array(900000,900001,900002,900003,900004,900005,900006,900007,900008,900009,900010,900011,900012,900013,900014,900015,900016,900017,900018,900019,900020,900021,900022,900023,900024,900025,900026,900027,900028,900029,900030,900031,900032,900033,900034,900035,900036,900037,900038,900039,900040,900041,900042,900043,900044,900045,900046,900047,900048,900049,900050,900051,900052,900053,900054,900055,900056,900057);
@@ -1799,7 +1799,6 @@ package com.sulake.habbo.window
          var BallLocation:* = TrackedFurni.getLocation();
          var BallTileX:int = int(BallLocation.x);
          var BallTileY:int = int(BallLocation.y);
-         this.ShowWhisperAlert("[DEBUG] ID:" + this.BallTrackFurniId + " pos:(" + BallTileX + "," + BallTileY + ")");
          if(BallTileX != this.BallTrackLastTileX || BallTileY != this.BallTrackLastTileY || this.BallTrackMarkersSpawned == false)
          {
             this.UpdateBallTrackMarkers(BallTileX,BallTileY,BallLocation.z);
@@ -1825,9 +1824,9 @@ package com.sulake.habbo.window
                this.WindowManager.roomEngine.disposeObjectFurniture(this.RoomSession.roomId,MarkerId);
             }
          }
-         // Marcador em cima do tile da bola foi REMOVIDO de propósito (2026-08-06):
-         // travou a interação de chutar a bola duas vezes seguidas em teste ao vivo.
-         // Ver docs/IDEAS.md. Só as linhas ao redor (nunca no tile da bola) continuam.
+         var BallBoxId:int = int(this.BallTrackMarkerIds[this.BallTrackMarkerIds.length - 1]);
+         this.WindowManager.roomEngine.addObjectFurnitureByName(this.RoomSession.roomId,BallBoxId,"bc_block_1",new Vector3d(CenterX,CenterY,CenterZ),new Vector3d(0),0,new EmptyStuffData());
+         this.SetFurnitureColorIndex(BallBoxId,13);
          MarkerIndex = 0;
          for(DirIndex = 0; DirIndex < Directions.length; DirIndex++)
          {
