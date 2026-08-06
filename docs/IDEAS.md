@@ -93,6 +93,33 @@ discreto):
 - **Sem ser selecionável/clicável** — não resolvido, é limitação da técnica de
   spawnar mobília fake (ela sempre é interativa como mobília de verdade)
 
+**Atualização v3 (2026-08-06, manhã) — implementado enquanto usuário estava
+fora, ainda não testado ao vivo:**
+
+- Marcador das linhas trocado pra `tile_marble` ("Mármore Carrara") — tapete
+  branco, achatado (`height:0.15`), `canstandon:true`. Bem mais leve que o
+  `bc_block_1` usado antes.
+- Linhas de 7 tiles em cada uma das 8 direções (56 marcadores brancos), nunca
+  no tile exato da bola.
+- Marcador central preto (`bc_block_1` cor 13) exatamente no tile da bola,
+  representando "a bola virou a caixa" — **esse é o de maior risco**, porque é
+  o único que intencionalmente ocupa o mesmo tile da bola (a suspeita de
+  travamento por roubo de clique se aplica mais a ele que às linhas).
+- Removido o glow vermelho (não faz mais sentido com a bola virando caixa).
+- `:caixapreta` desligar agora só chama `ClearBallTrackMarkers()` (sem mais
+  lidar com filtro de glow).
+- Adicionada limpeza de segurança em `OnRoomEnter` (reseta os estados do
+  rastreador ao trocar de sala, evita "fantasma" preso).
+- Timer de atualização subiu de 250ms pra 400ms (58 objetos pra
+  remover+recriar a cada movimento é mais pesado que os 8 de antes).
+
+**Ainda não resolvido/não testado:** se o marcador central (que fica em cima
+da bola de propósito) volta a causar o mesmo problema de clique que os
+marcadores antigos causaram. Se sim, a solução seria fazer o marcador central
+com **transparência/alpha reduzido** (não implementado ainda) ou aceitar que
+"bola vira caixa" e "sem travar clique" são mutuamente exclusivos com essa
+técnica, e ele precisa ficar OFFSET (ex: 1 tile ao lado, não em cima).
+
 **Recomendação pra próxima sessão:** não continuar consertando essa versão às
 cegas. Ideias pra investigar com calma, testando ao vivo junto:
 - Confirmar a causa real do travamento de movimento antes de reativar
