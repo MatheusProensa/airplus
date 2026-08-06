@@ -56,18 +56,16 @@ usuário testar candidatos de nome direto no jogo (ele já aceita qualquer nome 
 mobília digitado) — assim a gente descobre o classname certo sem eu ter que
 adivinhar código nenhum.
 
-## 🐾 Pendente (2026-08-06, noite) — :petfala interagir de verdade com as taças
+## 🐾 Implementado (2026-08-06, noite) — :petfala usa as taças de leite
 
-Ideia pro `:petfala`: além de falar "lPit. bebe", periodicamente **usar de
-verdade** as "Taças de Leite" da sala (clicar/usar o móvel, não só anunciar) —
-e também **repor automaticamente** as taças que ficam vazias (usar item do
-inventário pra encher de novo). Precisa investigar:
-- Como detectar taças vazias (provavelmente um `state`/`furniture_extra` no
-  model do objeto, como em `GetFurnitureState`)
-- Comando de "usar objeto" já existe (`useRoomObjectInActiveRoom`, usado pelo
-  `:autoclick`) — reaproveitar
-- Reposição automática de item de inventário é mais complexo, precisa
-  investigar a API de inventário/catálogo
+Classname achado no furnidata: `milkbowl` (categoria "pets"). `:petfala`
+agora, a cada ciclo de 10s, chama `useRoomObjectInActiveRoom` em toda taça
+de leite da sala (mesma chamada que o `:autoclick` já usa) — **sem checar
+se está cheia/vazia**, por pedido do usuário (reabastece mesmo que não
+esteja vazia). Ainda não confirmado ao vivo se isso já reabastece de
+verdade (se o clique já consome item do inventário automaticamente,
+padrão comum em vários móveis de pet do Habbo) ou se precisaria de uma
+segunda etapa explícita de "usar item do inventário na mobília".
 
 ## 🔧 Pendente (2026-08-06, manhã) — vazamento de marcador pra fora da sala
 
