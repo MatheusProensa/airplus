@@ -56,6 +56,27 @@ usuário testar candidatos de nome direto no jogo (ele já aceita qualquer nome 
 mobília digitado) — assim a gente descobre o classname certo sem eu ter que
 adivinhar código nenhum.
 
+## 🔧 Pendente (2026-08-06, manhã) — vazamento de marcador pra fora da sala
+
+`:caixapreta` funcionando bem (bola vira caixa, linhas seguem, sem travar
+interação, `:furniture` também ok) — só falta esse detalhe: em algumas salas,
+alguns tiles da linha (6 de distância) aparecem no vazio preto fora do chão
+real da sala. Já tentei corrigir 2 vezes:
+
+1. `roomEngine.getLegacyGeometry(roomId).isRoomTile(x,y)` — não resolveu
+2. Fallback conservador (skip em vez de spawnar se geometria for null) — não resolveu
+
+Confirmado em pelo menos 2 salas diferentes (não é caso isolado). Usuário
+pediu pra **manter o tamanho em 6** mesmo com esse bug, em vez de diminuir
+como gambiarra — prefere resolver certo depois.
+
+**Próxima tentativa:** `LegacyWallGeometry` pode não ser a fonte certa (o
+nome sugere foco em paredes, não chão). Vale investigar outras classes tipo
+`RoomPlaneParser` diretamente (tem `minX`/`maxX`/`minY`/`maxY`/`getTileHeight`
+públicos, mas não achei um jeito limpo de pegar a instância ATIVA da sala
+sem reconstruir uma nova do zero) — precisa de sessão com teste ao vivo
+junto pra depurar de verdade, meu palpite às cegas não funcionou.
+
 ## ⚠️ Status real (2026-08-06, madrugada) — feature pausada, tem bugs sérios
 
 Testado ao vivo (usuário no celular, eu sem visibilidade em tempo real) e
