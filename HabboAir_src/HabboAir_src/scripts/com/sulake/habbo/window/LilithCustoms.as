@@ -1839,7 +1839,7 @@ package com.sulake.habbo.window
                MarkerId = int(this.BallTrackMarkerIds[MarkerIndex]);
                TargetX = CenterX + int(DirOffset[0]) * DistIndex;
                TargetY = CenterY + int(DirOffset[1]) * DistIndex;
-               if(RoomGeometry == null || RoomGeometry.isRoomTile(TargetX,TargetY))
+               if(RoomGeometry != null && RoomGeometry.isRoomTile(TargetX,TargetY))
                {
                   this.WindowManager.roomEngine.addObjectFurnitureByName(this.RoomSession.roomId,MarkerId,"tile_marble",new Vector3d(TargetX,TargetY,CenterZ),new Vector3d(0),0,new EmptyStuffData());
                }
