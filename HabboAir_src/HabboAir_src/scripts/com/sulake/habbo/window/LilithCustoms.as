@@ -1797,8 +1797,8 @@ package com.sulake.habbo.window
             return;
          }
          var BallLocation:* = TrackedFurni.getLocation();
-         var BallTileX:int = int(BallLocation.x);
-         var BallTileY:int = int(BallLocation.y);
+         var BallTileX:int = int(Math.round(BallLocation.x));
+         var BallTileY:int = int(Math.round(BallLocation.y));
          if(BallTileX != this.BallTrackLastTileX || BallTileY != this.BallTrackLastTileY || this.BallTrackMarkersSpawned == false)
          {
             this.UpdateBallTrackMarkers(BallTileX,BallTileY,BallLocation.z);
