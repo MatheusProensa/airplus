@@ -1784,6 +1784,7 @@ package com.sulake.habbo.window
          {
             var RandomMessageIndex:int = int(this.randomRange(0,this.PetTalkMessages.length - 1));
             this.RoomSession.sendChatMessage(String(this.PetTalkMessages[RandomMessageIndex]),this.WindowManager.roomEngine.toolbar.freeFlowChat.preferedChatStyle);
+            this.UseMilkBowls();
          }
          this.PetTalkTimer.delay = 10000;
          this.PetTalkTimer.reset();
@@ -1919,6 +1920,23 @@ package com.sulake.habbo.window
             }
          }
          return 0;
+      }
+
+      private function UseMilkBowls() : void
+      {
+         if(this.IsRoomSessionAvailable == false)
+         {
+            return;
+         }
+         var RoomFurnis:Array = this.WindowManager.roomEngine.getRoomObjects(this.RoomSession.roomId,10);
+         var CurrentFurni:* = null;
+         for each(CurrentFurni in RoomFurnis)
+         {
+            if(CurrentFurni != null && CurrentFurni.getType() == "milkbowl")
+            {
+               this.WindowManager.roomEngine.useRoomObjectInActiveRoom(int(CurrentFurni.getId()),10);
+            }
+         }
       }
 
       private function ToggleFurniHide() : void
