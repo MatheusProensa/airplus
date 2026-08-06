@@ -173,6 +173,10 @@ package com.sulake.habbo.window
 
       internal var MilkBowlTimer:Timer;
 
+      internal var PetChatQueue:Array;
+
+      internal var PetChatTimer:Timer;
+
       public var BallTrackActive:Boolean = false;
 
       internal var BallTrackFurniId:int = 0;
@@ -324,6 +328,9 @@ package com.sulake.habbo.window
          this.MilkBowlQueue = new Array();
          this.MilkBowlTimer = new Timer(600);
          this.MilkBowlTimer.addEventListener(TimerEvent.TIMER,this.MilkBowlTimerHandler);
+         this.PetChatQueue = new Array();
+         this.PetChatTimer = new Timer(900);
+         this.PetChatTimer.addEventListener(TimerEvent.TIMER,this.PetChatTimerHandler);
          this.BallTrackTimer = new Timer(20);
          this.BallTrackTimer.addEventListener(TimerEvent.TIMER,this.BallTrackTimerHandler);
          this.BallTrackFilters = [new GlowFilter(16711680,1,40,40,8,3,false,false)];
@@ -1663,6 +1670,8 @@ package com.sulake.habbo.window
          this.BallTrackTimer.stop();
          this.MilkBowlTimer.stop();
          this.MilkBowlQueue = new Array();
+         this.PetChatTimer.stop();
+         this.PetChatQueue = new Array();
          this.FurniHideActive = false;
          this.HiddenFurniData = new Array();
          this.SpawnHelperTimer.stop();
@@ -1792,9 +1801,15 @@ package com.sulake.habbo.window
          if(this.IsRoomSessionAvailable == true)
          {
             var MessageIndex:int = 0;
+            this.PetChatQueue = new Array();
             for(MessageIndex = 0; MessageIndex < this.PetTalkMessages.length; MessageIndex++)
             {
-               this.RoomSession.sendChatMessage(String(this.PetTalkMessages[MessageIndex]),this.WindowManager.roomEngine.toolbar.freeFlowChat.preferedChatStyle);
+               this.PetChatQueue.push(String(this.PetTalkMessages[MessageIndex]));
+            }
+            this.PetChatTimer.stop();
+            if(this.PetChatQueue.length > 0)
+            {
+               this.PetChatTimer.start();
             }
             this.UseMilkBowls();
          }
@@ -1969,6 +1984,21 @@ package com.sulake.habbo.window
          if(this.MilkBowlQueue.length == 0)
          {
             this.MilkBowlTimer.stop();
+         }
+      }
+
+      private function PetChatTimerHandler(e:TimerEvent) : void
+      {
+         if(this.PetTalkActive == false || this.IsRoomSessionAvailable == false || this.PetChatQueue.length == 0)
+         {
+            this.PetChatTimer.stop();
+            return;
+         }
+         var NextMessage:String = String(this.PetChatQueue.shift());
+         this.RoomSession.sendChatMessage(NextMessage,this.WindowManager.roomEngine.toolbar.freeFlowChat.preferedChatStyle);
+         if(this.PetChatQueue.length == 0)
+         {
+            this.PetChatTimer.stop();
          }
       }
 
@@ -4210,6 +4240,8 @@ package com.sulake.habbo.window
                   this.PetTalkTimer.stop();
                   this.MilkBowlTimer.stop();
                   this.MilkBowlQueue = new Array();
+                  this.PetChatTimer.stop();
+                  this.PetChatQueue = new Array();
                   this.ShowWhisperAlert("Modo PetFala desativado!");
                }
                return false;
