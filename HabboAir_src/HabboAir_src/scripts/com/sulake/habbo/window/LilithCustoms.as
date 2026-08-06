@@ -1876,6 +1876,7 @@ package com.sulake.habbo.window
                if(IsOnPitch)
                {
                   this.WindowManager.roomEngine.addObjectFurnitureByName(this.RoomSession.roomId,MarkerId,"tile_marble",new Vector3d(TargetX,TargetY,CenterZ),new Vector3d(0),0,new EmptyStuffData());
+                  this.SetFurnitureAlpha(MarkerId,0.4);
                }
                MarkerIndex++;
             }
@@ -2145,6 +2146,21 @@ package com.sulake.habbo.window
          if(RequestedFurniture)
          {
             RequestedFurniture.getModel().setNumber("furniture_color",param2,true);
+            return true;
+         }
+         return false;
+      }
+
+      public function SetFurnitureAlpha(param1:int, param2:Number) : Boolean
+      {
+         if(this.IsRoomSessionAvailable == false)
+         {
+            return false;
+         }
+         var RequestedFurniture:* = this.WindowManager.roomEngine.getRoomObject(this.RoomSession.roomId,param1,10);
+         if(RequestedFurniture)
+         {
+            RequestedFurniture.getModel().setNumber("furniture_alpha_multiplier",param2,true);
             return true;
          }
          return false;
