@@ -1863,8 +1863,9 @@ package com.sulake.habbo.window
             }
          }
          var BallBoxId:int = int(this.BallTrackMarkerIds[this.BallTrackMarkerIds.length - 1]);
-         this.WindowManager.roomEngine.addObjectFurnitureByName(this.RoomSession.roomId,BallBoxId,"bc_block_1",new Vector3d(CenterX,CenterY,CenterZ),new Vector3d(0),0,new EmptyStuffData());
-         this.SetFurnitureColorIndex(BallBoxId,13);
+         // TEMP: caixa preta da bola desativada para teste (pediu pra tirar "por enquanto")
+         //this.WindowManager.roomEngine.addObjectFurnitureByName(this.RoomSession.roomId,BallBoxId,"bc_block_1",new Vector3d(CenterX,CenterY,CenterZ),new Vector3d(0),0,new EmptyStuffData());
+         //this.SetFurnitureColorIndex(BallBoxId,13);
          var PitchBoxes:Array = new Array();
          var RoomFurnisForPitch:Array = this.WindowManager.roomEngine.getRoomObjects(this.RoomSession.roomId,10);
          var PitchFurni:* = null;
